@@ -129,149 +129,149 @@ Server/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/build
 .PHONY : Server/fast
 
-src/AbstractHandle.o: src/AbstractHandle.cc.o
-.PHONY : src/AbstractHandle.o
+src/abstractHandle.o: src/abstractHandle.cc.o
+.PHONY : src/abstractHandle.o
 
 # target to build an object file
-src/AbstractHandle.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/AbstractHandle.cc.o
-.PHONY : src/AbstractHandle.cc.o
+src/abstractHandle.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/abstractHandle.cc.o
+.PHONY : src/abstractHandle.cc.o
 
-src/AbstractHandle.i: src/AbstractHandle.cc.i
-.PHONY : src/AbstractHandle.i
+src/abstractHandle.i: src/abstractHandle.cc.i
+.PHONY : src/abstractHandle.i
 
 # target to preprocess a source file
-src/AbstractHandle.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/AbstractHandle.cc.i
-.PHONY : src/AbstractHandle.cc.i
+src/abstractHandle.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/abstractHandle.cc.i
+.PHONY : src/abstractHandle.cc.i
 
-src/AbstractHandle.s: src/AbstractHandle.cc.s
-.PHONY : src/AbstractHandle.s
+src/abstractHandle.s: src/abstractHandle.cc.s
+.PHONY : src/abstractHandle.s
 
 # target to generate assembly for a file
-src/AbstractHandle.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/AbstractHandle.cc.s
-.PHONY : src/AbstractHandle.cc.s
+src/abstractHandle.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/abstractHandle.cc.s
+.PHONY : src/abstractHandle.cc.s
 
-src/Connections.o: src/Connections.cc.o
-.PHONY : src/Connections.o
+src/connections.o: src/connections.cc.o
+.PHONY : src/connections.o
 
 # target to build an object file
-src/Connections.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Connections.cc.o
-.PHONY : src/Connections.cc.o
+src/connections.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/connections.cc.o
+.PHONY : src/connections.cc.o
 
-src/Connections.i: src/Connections.cc.i
-.PHONY : src/Connections.i
+src/connections.i: src/connections.cc.i
+.PHONY : src/connections.i
 
 # target to preprocess a source file
-src/Connections.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Connections.cc.i
-.PHONY : src/Connections.cc.i
+src/connections.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/connections.cc.i
+.PHONY : src/connections.cc.i
 
-src/Connections.s: src/Connections.cc.s
-.PHONY : src/Connections.s
+src/connections.s: src/connections.cc.s
+.PHONY : src/connections.s
 
 # target to generate assembly for a file
-src/Connections.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Connections.cc.s
-.PHONY : src/Connections.cc.s
+src/connections.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/connections.cc.s
+.PHONY : src/connections.cc.s
 
-src/DataProcess.o: src/DataProcess.cc.o
-.PHONY : src/DataProcess.o
+src/dataProcess.o: src/dataProcess.cc.o
+.PHONY : src/dataProcess.o
 
 # target to build an object file
-src/DataProcess.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/DataProcess.cc.o
-.PHONY : src/DataProcess.cc.o
+src/dataProcess.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/dataProcess.cc.o
+.PHONY : src/dataProcess.cc.o
 
-src/DataProcess.i: src/DataProcess.cc.i
-.PHONY : src/DataProcess.i
+src/dataProcess.i: src/dataProcess.cc.i
+.PHONY : src/dataProcess.i
 
 # target to preprocess a source file
-src/DataProcess.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/DataProcess.cc.i
-.PHONY : src/DataProcess.cc.i
+src/dataProcess.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/dataProcess.cc.i
+.PHONY : src/dataProcess.cc.i
 
-src/DataProcess.s: src/DataProcess.cc.s
-.PHONY : src/DataProcess.s
+src/dataProcess.s: src/dataProcess.cc.s
+.PHONY : src/dataProcess.s
 
 # target to generate assembly for a file
-src/DataProcess.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/DataProcess.cc.s
-.PHONY : src/DataProcess.cc.s
+src/dataProcess.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/dataProcess.cc.s
+.PHONY : src/dataProcess.cc.s
 
-src/FApplycations.o: src/FApplycations.cc.o
-.PHONY : src/FApplycations.o
+src/fapplycations.o: src/fapplycations.cc.o
+.PHONY : src/fapplycations.o
 
 # target to build an object file
-src/FApplycations.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/FApplycations.cc.o
-.PHONY : src/FApplycations.cc.o
+src/fapplycations.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/fapplycations.cc.o
+.PHONY : src/fapplycations.cc.o
 
-src/FApplycations.i: src/FApplycations.cc.i
-.PHONY : src/FApplycations.i
+src/fapplycations.i: src/fapplycations.cc.i
+.PHONY : src/fapplycations.i
 
 # target to preprocess a source file
-src/FApplycations.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/FApplycations.cc.i
-.PHONY : src/FApplycations.cc.i
+src/fapplycations.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/fapplycations.cc.i
+.PHONY : src/fapplycations.cc.i
 
-src/FApplycations.s: src/FApplycations.cc.s
-.PHONY : src/FApplycations.s
+src/fapplycations.s: src/fapplycations.cc.s
+.PHONY : src/fapplycations.s
 
 # target to generate assembly for a file
-src/FApplycations.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/FApplycations.cc.s
-.PHONY : src/FApplycations.cc.s
+src/fapplycations.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/fapplycations.cc.s
+.PHONY : src/fapplycations.cc.s
 
-src/Message.o: src/Message.cc.o
-.PHONY : src/Message.o
+src/message.o: src/message.cc.o
+.PHONY : src/message.o
 
 # target to build an object file
-src/Message.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Message.cc.o
-.PHONY : src/Message.cc.o
+src/message.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/message.cc.o
+.PHONY : src/message.cc.o
 
-src/Message.i: src/Message.cc.i
-.PHONY : src/Message.i
+src/message.i: src/message.cc.i
+.PHONY : src/message.i
 
 # target to preprocess a source file
-src/Message.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Message.cc.i
-.PHONY : src/Message.cc.i
+src/message.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/message.cc.i
+.PHONY : src/message.cc.i
 
-src/Message.s: src/Message.cc.s
-.PHONY : src/Message.s
+src/message.s: src/message.cc.s
+.PHONY : src/message.s
 
 # target to generate assembly for a file
-src/Message.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Message.cc.s
-.PHONY : src/Message.cc.s
+src/message.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/message.cc.s
+.PHONY : src/message.cc.s
 
-src/Server.o: src/Server.cc.o
-.PHONY : src/Server.o
+src/server.o: src/server.cc.o
+.PHONY : src/server.o
 
 # target to build an object file
-src/Server.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Server.cc.o
-.PHONY : src/Server.cc.o
+src/server.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/server.cc.o
+.PHONY : src/server.cc.o
 
-src/Server.i: src/Server.cc.i
-.PHONY : src/Server.i
+src/server.i: src/server.cc.i
+.PHONY : src/server.i
 
 # target to preprocess a source file
-src/Server.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Server.cc.i
-.PHONY : src/Server.cc.i
+src/server.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/server.cc.i
+.PHONY : src/server.cc.i
 
-src/Server.s: src/Server.cc.s
-.PHONY : src/Server.s
+src/server.s: src/server.cc.s
+.PHONY : src/server.s
 
 # target to generate assembly for a file
-src/Server.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Server.cc.s
-.PHONY : src/Server.cc.s
+src/server.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/server.cc.s
+.PHONY : src/server.cc.s
 
 test/main.o: test/main.cc.o
 .PHONY : test/main.o
@@ -306,24 +306,24 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Server"
-	@echo "... src/AbstractHandle.o"
-	@echo "... src/AbstractHandle.i"
-	@echo "... src/AbstractHandle.s"
-	@echo "... src/Connections.o"
-	@echo "... src/Connections.i"
-	@echo "... src/Connections.s"
-	@echo "... src/DataProcess.o"
-	@echo "... src/DataProcess.i"
-	@echo "... src/DataProcess.s"
-	@echo "... src/FApplycations.o"
-	@echo "... src/FApplycations.i"
-	@echo "... src/FApplycations.s"
-	@echo "... src/Message.o"
-	@echo "... src/Message.i"
-	@echo "... src/Message.s"
-	@echo "... src/Server.o"
-	@echo "... src/Server.i"
-	@echo "... src/Server.s"
+	@echo "... src/abstractHandle.o"
+	@echo "... src/abstractHandle.i"
+	@echo "... src/abstractHandle.s"
+	@echo "... src/connections.o"
+	@echo "... src/connections.i"
+	@echo "... src/connections.s"
+	@echo "... src/dataProcess.o"
+	@echo "... src/dataProcess.i"
+	@echo "... src/dataProcess.s"
+	@echo "... src/fapplycations.o"
+	@echo "... src/fapplycations.i"
+	@echo "... src/fapplycations.s"
+	@echo "... src/message.o"
+	@echo "... src/message.i"
+	@echo "... src/message.s"
+	@echo "... src/server.o"
+	@echo "... src/server.i"
+	@echo "... src/server.s"
 	@echo "... test/main.o"
 	@echo "... test/main.i"
 	@echo "... test/main.s"

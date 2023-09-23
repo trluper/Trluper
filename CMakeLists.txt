@@ -13,13 +13,13 @@ include_directories(include test)
 
 # 添加可执行文件的目标，包括测试代码源文件和可执行文件的名称
 add_executable(Server
-  src/Message.cc
-  src/Server.cc
+  src/message.cc
+  src/server.cc
   test/main.cc
-  src/AbstractHandle.cc
-  src/Connections.cc
-  src/DataProcess.cc
-  src/FApplycations.cc
+  src/abstractHandle.cc
+  src/connections.cc
+  src/dataProcess.cc
+  src/fapplycations.cc
   
 )
 
