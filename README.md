@@ -28,4 +28,4 @@
 
 # 三层结构
 
-<img src="images/TrluperPro.png" wiidth =1000>
+<img src="[images/](https://github.com/trluper/Trluper/tree/master/images)https://github.com/trluper/Trluper/tree/master/images/TrluperPro.png" width =1000>
