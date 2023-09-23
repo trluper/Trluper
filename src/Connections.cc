@@ -87,14 +87,17 @@ inline AbstractMsg *Connections::currentHandle(AbstractMsg &msg)
     因此服务器必须提供一个静态函数来设置相应dataFd的event，是不可写状态变为可写*/
     else if(state->IO_DIC == IO_Direction::OUT){
         DYNAMIC_GETREF(Message,_outMsg,msg);
+#ifdef _OLD_CODE_
         if(false == HashOutPut()){
             Server::ServerSetConectionOut(*this);
         }
+#endif
         std::shared_ptr<std::string> str = std::make_shared<std::string>(_outMsg->message);
         writerBuffer.push_back(str);
         //对来自数据层的Message释放
         delete _outMsg;
         _outMsg = nullptr;
+        FlushOut();
     }
     return _msg;
 }

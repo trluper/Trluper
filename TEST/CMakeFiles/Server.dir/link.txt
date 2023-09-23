@@ -1,0 +1,1 @@
+g++ -g -rdynamic CMakeFiles/Server.dir/src/Message.cc.o CMakeFiles/Server.dir/src/Server.cc.o CMakeFiles/Server.dir/test/main.cc.o CMakeFiles/Server.dir/src/AbstractHandle.cc.o CMakeFiles/Server.dir/src/Connections.cc.o CMakeFiles/Server.dir/src/DataProcess.cc.o CMakeFiles/Server.dir/src/FApplycations.cc.o -o Server 
