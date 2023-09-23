@@ -57,10 +57,12 @@ public:
     static void ServerDelConn(struct epoll_event& ev);
     /*设置server_exit的状态*/
     static void ServerExit();
-    /*设置dataFd由不可写状态变为可写状态，该静态函数是在连接层writeBuffer由没数据变为有数据时触发*/
-    static void ServerSetConectionOut(Connections& conn);
-    /*在写完后，重新设置dataFd由可写变为不可写状态*/
-    static void ServerUnSetConnectionOut(Connections& conn);
+    /*
+    设置dataFd由不可写状态变为可写状态，该静态函数是在连接层writeBuffer由没数据变为有数据时触发
+    *static void ServerSetConectionOut(Connections& conn);
+    在写完后，重新设置dataFd由可写变为不可写状态
+    *static void ServerUnSetConnectionOut(Connections& conn);
+    */
     /*当业务应用层处理完后，应该调用数据层的额Handle函数进行响应，该函数在业务层处理后调用，由开发者调用*/
     static void ServerUseHandleOfDataProcess(DataProcess& process,Request* request);
 

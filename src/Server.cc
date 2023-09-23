@@ -54,6 +54,8 @@ void Server::ServerExit()
     if(nullptr!=singleServer) singleServer->server_exit=true;
 }
 
+#ifdef _OLD_CODE_
+
 void Server::ServerSetConectionOut(Connections &conn)
 {
     int dataFd = conn.GetFd();
@@ -74,6 +76,7 @@ void Server::ServerUnSetConnectionOut(Connections &conn)
     //ev.data.fd = conn.GetFd();
     epoll_ctl(singleServer->epollfd,EPOLL_CTL_MOD,conn.GetFd(),&ev);
 }
+#endif
 
 void Server::ServerUseHandleOfDataProcess(DataProcess &process, Request* request)
 {
@@ -168,7 +171,7 @@ void Server::run()
             if(hashChange[i].data.fd==listenfd&&hashChange[i].events&EPOLLIN){ 
                 ctlAcceptFd();
             }
-            //*dataFd读事件，这里读写事件混合再一起会出现问题，后续需要改变
+            //*dataFd读事件，服务器epoll_wait只获取读事件，写事件在处理完请求后，直接响应发送
             else if(hashChange[i].events&EPOLLIN){
                 IOState state(IO_Direction::IN);
                 Connections* conn =(Connections*)hashChange[i].data.ptr;
@@ -178,7 +181,8 @@ void Server::run()
                     Server::ServerDelConn(hashChange[i]);
                 }
             }
-            //*dataFd写事件
+#ifdef _OLD_CODE_
+            //*dataFd写事件,服务器主动发送时就会触发
             else{
                 IOState state(IO_Direction::OUT);
                 Connections* conn =(Connections*)hashChange[i].data.ptr;
@@ -186,6 +190,7 @@ void Server::run()
                 if(false == conn->HashOutPut()) ServerUnSetConnectionOut(*conn);
 
             }
+#endif
         }
     }
 }

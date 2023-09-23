@@ -3,7 +3,6 @@ project(Server)
 
 set(CMAKE_CXX_COMPILER g++)  # 指定 C++ 编译器
 
-
  
 #添加debug信息，使得生成的可执行文件可以调试
 set(CMAKE_BUILD_TYPE DEBUG)
