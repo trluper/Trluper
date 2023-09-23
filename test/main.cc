@@ -6,16 +6,16 @@
  * @FilePath: /Trluper/TEST/main.cpp
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-#include "Factory.h"
+#include "factory.h"
 
 
 
 
 
 int main(){
-    AbstractFactory* factorySingle = Factory::GetSingle();
-    Server::ServerInit("172.29.249.90",8080,factorySingle);
-    Server::ServerExceptionStop();
-    Server::ServerRun();
+    Trluper::AbstractFactory* factorySingle = Factory::GetSingle();
+    Trluper::Server::ServerInit("172.29.249.90",8080,factorySingle);
+    Trluper::Server::ServerExceptionStop();
+    Trluper::Server::ServerRun();
     exit(0);
 }
