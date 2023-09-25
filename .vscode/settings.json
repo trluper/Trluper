@@ -76,5 +76,6 @@
     },
     "editor.suggest.snippetsPreventQuickSuggestions": false,
     "better-comments.multilineComments": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "aiXcoder.showTrayIcon": true
 }

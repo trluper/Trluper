@@ -2,27 +2,25 @@
 #ifndef _SERVER_H_
 #define _SERVER_H_
 
-#include <string>
+
 #include <list>
 #include <iostream>
 //epoll和socket头文件
-#include <sys/epoll.h>
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#include <thread>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
-#include <string.h>
-#include <unistd.h>
 #include <sys/wait.h>
 #include <iostream>
 #include <future>
 #include <signal.h>
 #include <unordered_map>
+#include "threadPool.h"
 #include "connections.h"
 
 

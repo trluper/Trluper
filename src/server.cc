@@ -161,11 +161,11 @@ bool Server::init()
 void Server::run()
 {
     while(false==server_exit){
-        struct epoll_event hashChange[100];
+        struct epoll_event hashChange[8000];
         //阻塞监听
         int iEpollRet = 0;
         //!这里有一个bug，每次accept后都会再一次触发epoll_wait，这是因为datafd采用边缘触发，刚建立连接，datafd由不可写变为可写就会出现这种二次触发现象(已修正)
-        iEpollRet = epoll_wait(epollfd, hashChange, 100, -1);
+        iEpollRet = epoll_wait(epollfd, hashChange, 8000, -1);
         //!V0.3版本
         for(int i=0;i<iEpollRet;++i){
             //*listenfd读事件
