@@ -7,11 +7,11 @@ Server* Server::singleServer = nullptr;
 /// @brief调用构造函数Server()和Init(),创建服务器socket，并执行绑定、监听功能，调用init()进行epoll上树操作
 /// @param ip ：ip地址
 /// @param port ：端口号
-Server *Server::ServerInit(std::string &&ip, int &&port,AbstractFactory* _singleFactory)
+Server *Server::ServerInit(std::string &&ip, int &&port,AbstractFactory* _singleFactory,bool multiThread)
 {
     if(nullptr==singleServer){
         //完美转发
-        singleServer = new Server(std::forward<std::string>(ip),std::forward<int>(port), _singleFactory);//9/12
+        singleServer = new Server(std::forward<std::string>(ip),std::forward<int>(port), _singleFactory,multiThread);//9/12
     }
     return singleServer;
 }
@@ -24,6 +24,7 @@ void Server::ServerExceptionStop()
     sigaction(SIGINT,&SigEvent,NULL);
     sigaction(SIGQUIT,&SigEvent,NULL);
     sigaction(SIGSTOP,&SigEvent,NULL);
+    sigaction(SIGTSTP,&SigEvent,NULL);
 }
 
 /// @brief 停止服务器前应该调用的函数，此时需要回收资源，内部调用end函数
@@ -31,7 +32,7 @@ void Server::ServerStop(int signal,siginfo_t* info,void* context)
 {
     singleServer->~Server();
     delete singleServer;
-    
+    exit(0);
 }
 
 
@@ -53,6 +54,16 @@ void Server::ServerDelConn(epoll_event &ev)
 void Server::ServerExit()
 {
     if(nullptr!=singleServer) singleServer->server_exit=true;
+}
+
+void Server::ServerAccept()
+{
+    if(nullptr!=singleServer) singleServer->ctlAcceptFd();
+}
+
+int Server::ServerGetListenFd()
+{
+    return singleServer->listenfd;
 }
 
 #ifdef _OLD_CODE_
@@ -90,7 +101,7 @@ void Server::ServerUseHandleOfDataProcess(DataProcess &process, Request* request
 /// @brief 创建服务器socket，并执行绑定、监听功能，调用init()进行epoll上树操作
 /// @param ip ：ip地址
 /// @param port ：端口号
-Server::Server(std::string ip, int port,AbstractFactory* _singleFactory):singleFactory(_singleFactory)
+Server::Server(std::string ip, int port,AbstractFactory* _singleFactory,bool multiThread):singleFactory(_singleFactory)
 {
     const char* _ip=ip.c_str();
     int sokcetfd=socket(AF_INET,SOCK_STREAM,0);
@@ -117,6 +128,9 @@ Server::Server(std::string ip, int port,AbstractFactory* _singleFactory):singleF
 
     }else{
         perror("Server start error: Get socket failed");
+    }
+    if(true == multiThread){
+        threadPool = new ThreadPool();
     }   
 }
 
@@ -136,6 +150,9 @@ Server::~Server()
         close(epollfd);
     }
     close(listenfd);
+    if(nullptr != threadPool){
+        delete threadPool;
+    }
     std::cout<<"GoodBye!"<<std::endl;
 }   
 
@@ -168,6 +185,7 @@ void Server::run()
         iEpollRet = epoll_wait(epollfd, hashChange, 8000, -1);
         //!V0.3版本
         for(int i=0;i<iEpollRet;++i){
+#ifdef _SIGLETHREAD_
             //*listenfd读事件
             if(hashChange[i].data.fd==listenfd&&hashChange[i].events&EPOLLIN){ 
                 ctlAcceptFd();
@@ -182,6 +200,9 @@ void Server::run()
                     Server::ServerDelConn(hashChange[i]);
                 }
             }
+#else
+            while(false == threadPool->pushTask(&hashChange[i]));
+#endif
 #ifdef _OLD_CODE_
             //*dataFd写事件,服务器主动发送时就会触发
             else{

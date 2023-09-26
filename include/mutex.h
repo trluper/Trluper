@@ -187,7 +187,7 @@ template<typename T>
 class WriteLockguard{
 public:
     WriteLockguard(T& _wrmutex):m_wrmutex(_wrmutex){
-        m_rdmutex.wrlock();
+        m_wrmutex.wrlock();
         m_locked = true;
     }
     ~WriteLockguard(){

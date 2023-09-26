@@ -14,8 +14,8 @@
 
 int main(){
     Trluper::AbstractFactory* factorySingle = Factory::GetSingle();
-    Trluper::Server::ServerInit("172.29.249.90",8080,factorySingle);
     Trluper::Server::ServerExceptionStop();
+    Trluper::Server::ServerInit("172.26.195.43",8080,factorySingle);
     Trluper::Server::ServerRun();
-    exit(0);
+    
 }

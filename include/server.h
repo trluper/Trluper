@@ -6,7 +6,6 @@
 #include <list>
 #include <iostream>
 //epoll和socket头文件
-
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -21,7 +20,7 @@
 #include <signal.h>
 #include <unordered_map>
 #include "threadPool.h"
-#include "connections.h"
+
 
 
 /*
@@ -42,11 +41,12 @@ class Connections;
 class DataProcess;
 class AbstractFactory;
 class UserMsg;
+class ThreadPool;
 
 class Server{
 public:
     /*初始化一个服务器单例对象，提供服务的开始，内部其实纠错创建绑定监听socket、并将socker上树*/
-    static Server* ServerInit(std::string&& ip,int&& port, AbstractFactory* _singleFactory);
+    static Server* ServerInit(std::string&& ip,int&& port, AbstractFactory* _singleFactory,bool multiThread = true );
     /*信号的捕捉，有时候我们停止服务器是在发生异常或者输入ctrl+c:SIGINT、ctrl+z:SIGSTOP、ctrl+\:SIGQUIT造成服务器非正常退出
     ，无法执行析构函数，因此需要捕捉这些信号来执行析构*/
     static void ServerExceptionStop();
@@ -58,6 +58,10 @@ public:
     static void ServerDelConn(struct epoll_event& ev);
     /*设置server_exit的状态*/
     static void ServerExit();
+    /*供外部调用适用的accept*/
+    static void ServerAccept();
+    /*供外部调用获取listenfd*/
+    static int ServerGetListenFd();
     /*
     设置dataFd由不可写状态变为可写状态，该静态函数是在连接层writeBuffer由没数据变为有数据时触发
     *static void ServerSetConectionOut(Connections& conn);
@@ -69,7 +73,7 @@ public:
 
 private:
     //构造、拷贝构造、赋值私有化
-    Server(std::string ip,int port,AbstractFactory* _singleFactory);
+    Server(std::string ip,int port,AbstractFactory* _singleFactory,bool multiThread);
     Server(const Server& s){}
     const Server& operator=(const Server& s){return *this;}
     ~Server();
@@ -93,6 +97,8 @@ private:
     static Server* singleServer;
     //工厂的单例对象，需要开发者初始化
     AbstractFactory* singleFactory;
+    //线程池对象
+    ThreadPool* threadPool = nullptr;
 
 };
 
