@@ -20,8 +20,11 @@ add_executable(Server
   src/connections.cc
   src/dataProcess.cc
   src/fapplycations.cc
-  
+  src/thread.cc
+  src/threadPool.cc
 )
+
+link_libraries(pthread)
 
 
 

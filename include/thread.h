@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <functional>
 #include <thread>
+#include <exception>
 #include <memory>
 #include <string>
 #include <string.h>

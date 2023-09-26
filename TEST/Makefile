@@ -273,6 +273,54 @@ src/server.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/server.cc.s
 .PHONY : src/server.cc.s
 
+src/thread.o: src/thread.cc.o
+.PHONY : src/thread.o
+
+# target to build an object file
+src/thread.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/thread.cc.o
+.PHONY : src/thread.cc.o
+
+src/thread.i: src/thread.cc.i
+.PHONY : src/thread.i
+
+# target to preprocess a source file
+src/thread.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/thread.cc.i
+.PHONY : src/thread.cc.i
+
+src/thread.s: src/thread.cc.s
+.PHONY : src/thread.s
+
+# target to generate assembly for a file
+src/thread.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/thread.cc.s
+.PHONY : src/thread.cc.s
+
+src/threadPool.o: src/threadPool.cc.o
+.PHONY : src/threadPool.o
+
+# target to build an object file
+src/threadPool.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/threadPool.cc.o
+.PHONY : src/threadPool.cc.o
+
+src/threadPool.i: src/threadPool.cc.i
+.PHONY : src/threadPool.i
+
+# target to preprocess a source file
+src/threadPool.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/threadPool.cc.i
+.PHONY : src/threadPool.cc.i
+
+src/threadPool.s: src/threadPool.cc.s
+.PHONY : src/threadPool.s
+
+# target to generate assembly for a file
+src/threadPool.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/threadPool.cc.s
+.PHONY : src/threadPool.cc.s
+
 test/main.o: test/main.cc.o
 .PHONY : test/main.o
 
@@ -324,6 +372,12 @@ help:
 	@echo "... src/server.o"
 	@echo "... src/server.i"
 	@echo "... src/server.s"
+	@echo "... src/thread.o"
+	@echo "... src/thread.i"
+	@echo "... src/thread.s"
+	@echo "... src/threadPool.o"
+	@echo "... src/threadPool.i"
+	@echo "... src/threadPool.s"
 	@echo "... test/main.o"
 	@echo "... test/main.i"
 	@echo "... test/main.s"

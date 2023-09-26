@@ -15,7 +15,7 @@ namespace Trluper{
         int ret = pthread_create(& m_thread,nullptr,& Thread::run,this);
         if(ret){
             printf("Thread error:% s\n",strerror(ret));
-            
+            throw std::exception();
         }
     }
     Thread::~Thread()
@@ -30,7 +30,7 @@ namespace Trluper{
             int ret = pthread_join(m_thread,nullptr);
             if(ret){
                 printf("join:% s\n",strerror(ret));
-                
+                throw std::exception();
             }
             m_thread = 0;
         }
@@ -64,8 +64,8 @@ namespace Trluper{
         pthread_setname_np(pthread_self(),thread->m_name.substr(0,16).c_str());
         std::function<void*(void*)> cb;
         cb.swap(thread->m_cb);
-        void* arg = thread->m_arg;
-        cb(arg);
+        void* _arg = thread->m_arg;
+        cb(_arg);
         return 0;
     }
 }
