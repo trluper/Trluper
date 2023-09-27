@@ -13,9 +13,10 @@
 
 
 int main(){
+    std::string configPath = "/home/project/Trluper/config/config.json";
     Trluper::AbstractFactory* factorySingle = Factory::GetSingle();
     Trluper::Server::ServerExceptionStop();
-    Trluper::Server::ServerInit("172.26.195.43",8080,factorySingle);
+    Trluper::Server::ServerInit(configPath,factorySingle);
     Trluper::Server::ServerRun();
     
 }

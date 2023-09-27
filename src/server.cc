@@ -7,11 +7,11 @@ Server* Server::singleServer = nullptr;
 /// @brief调用构造函数Server()和Init(),创建服务器socket，并执行绑定、监听功能，调用init()进行epoll上树操作
 /// @param ip ：ip地址
 /// @param port ：端口号
-Server *Server::ServerInit(std::string &&ip, int &&port,AbstractFactory* _singleFactory,bool multiThread)
+Server *Server::ServerInit(std::string& path ,AbstractFactory* _singleFactory,bool multiThread)
 {
     if(nullptr==singleServer){
         //完美转发
-        singleServer = new Server(std::forward<std::string>(ip),std::forward<int>(port), _singleFactory,multiThread);//9/12
+        singleServer = new Server(path,_singleFactory,multiThread);//9/12
     }
     return singleServer;
 }
@@ -101,11 +101,15 @@ void Server::ServerUseHandleOfDataProcess(DataProcess &process, Request* request
 /// @brief 创建服务器socket，并执行绑定、监听功能，调用init()进行epoll上树操作
 /// @param ip ：ip地址
 /// @param port ：端口号
-Server::Server(std::string ip, int port,AbstractFactory* _singleFactory,bool multiThread):singleFactory(_singleFactory)
+Server::Server(std::string& path, AbstractFactory* _singleFactory,bool multiThread):singleFactory(_singleFactory)
 {
+    const Json::Value& root = getConfig(path);
+    std::string ip = root["ip"].asString();
+    int port = root["port"].asInt();
     const char* _ip=ip.c_str();
+    max_handle = root["max_handle"].asInt();
+
     int sokcetfd=socket(AF_INET,SOCK_STREAM,0);
-    std::cout<<"Server start at IP:"<<ip<<" ,Port:"<<port<<std::endl;
     if(0<=sokcetfd){
         memset(&serveraddr, 0, sizeof(serveraddr));
         serveraddr.sin_port=htons(port);
@@ -129,8 +133,9 @@ Server::Server(std::string ip, int port,AbstractFactory* _singleFactory,bool mul
     }else{
         perror("Server start error: Get socket failed");
     }
+    
     if(true == multiThread){
-        threadPool = new ThreadPool();
+        threadPool = new ThreadPool(root["thread_nums"].asInt(),max_handle);
     }   
 }
 
@@ -178,11 +183,11 @@ bool Server::init()
 void Server::run()
 {
     while(false==server_exit){
-        struct epoll_event hashChange[8000];
+        struct epoll_event hashChange[max_handle];
         //阻塞监听
         int iEpollRet = 0;
         //!这里有一个bug，每次accept后都会再一次触发epoll_wait，这是因为datafd采用边缘触发，刚建立连接，datafd由不可写变为可写就会出现这种二次触发现象(已修正)
-        iEpollRet = epoll_wait(epollfd, hashChange, 8000, -1);
+        iEpollRet = epoll_wait(epollfd, hashChange, max_handle, -1);
         //!V0.3版本
         for(int i=0;i<iEpollRet;++i){
 #ifdef _SIGLETHREAD_
@@ -268,5 +273,4 @@ void Server::ctlCloseFd(struct epoll_event& ev)
     //释放堆区
     delete conn;
 }
-
 }
