@@ -20,6 +20,7 @@
 #include <signal.h>
 #include <unordered_map>
 #include "threadPool.h"
+#include "config.h"
 
 
 
@@ -46,7 +47,7 @@ class ThreadPool;
 class Server{
 public:
     /*初始化一个服务器单例对象，提供服务的开始，内部其实纠错创建绑定监听socket、并将socker上树*/
-    static Server* ServerInit(std::string&& ip,int&& port, AbstractFactory* _singleFactory,bool multiThread = true );
+    static Server* ServerInit(std::string& path, AbstractFactory* _singleFactory,bool multiThread = true);
     /*信号的捕捉，有时候我们停止服务器是在发生异常或者输入ctrl+c:SIGINT、ctrl+z:SIGSTOP、ctrl+\:SIGQUIT造成服务器非正常退出
     ，无法执行析构函数，因此需要捕捉这些信号来执行析构*/
     static void ServerExceptionStop();
@@ -73,7 +74,7 @@ public:
 
 private:
     //构造、拷贝构造、赋值私有化
-    Server(std::string ip,int port,AbstractFactory* _singleFactory,bool multiThread);
+    Server(std::string& path, AbstractFactory* _singleFactory,bool multiThread);
     Server(const Server& s){}
     const Server& operator=(const Server& s){return *this;}
     ~Server();
@@ -99,6 +100,8 @@ private:
     AbstractFactory* singleFactory;
     //线程池对象
     ThreadPool* threadPool = nullptr;
+    //最大处理请求缓存
+    int max_handle;
 
 };
 
