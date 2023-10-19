@@ -49,7 +49,7 @@ namespace Trluper{
             }
             struct epoll_event* ev = m_taskQueue.front();
             m_taskQueue.pop_front();
-            m_lock_taskQueue.unlock();
+            m_lock_taskQueue.unlock(); 
 
             if(ev->data.fd==Server::ServerGetListenFd()&&ev->events&EPOLLIN){ 
                 Server::ServerAccept();
