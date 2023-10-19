@@ -25,6 +25,8 @@ add_executable(Server
   src/fapplycations.cc
   src/thread.cc
   src/threadPool.cc
+  src/timer.cc
+  src/util.cc
 )
 
 target_link_libraries(Server PRIVATE jsoncpp pthread)
