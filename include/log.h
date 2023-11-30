@@ -36,6 +36,7 @@
         Trluper::LogEventWrap(Trluper::LogEvent::ptr(new Trluper::LogEvent(logger ,level,\
         __FILE__, __func__, __LINE__, 0, Trluper::GetThreadID(), Trluper::GetCoroutineID(), \
         time(0), Trluper::Thread::GetName()))).getSS()
+
 #define LOG_SS_DEBUG(logger) LOG_SS(logger, Trluper::LogLevel::DEBUG)
 #define LOG_SS_INFO(logger) LOG_SS(logger,Trluper::LogLevel::INFO)
 #define LOG_SS_WARN(logger) LOG_SS(logger,Trluper::LogLevel::WARN)
@@ -53,6 +54,9 @@
 #define LOG_FMT_WARN(logger,fmt,...) LOG_FMT(logger, Trluper::LogLevel::WARN, fmt, __VA_ARGS__)
 #define LOG_FMT_ERROR(logger,fmt,...) LOG_FMT(logger, Trluper::LogLevel::ERROR, fmt, __VA_ARGS__)
 #define LOG_FMT_FATAL(logger,fmt,...) LOG_FMT(logger, Trluper::LogLevel::FATAL, fmt, __VA_ARGS__)
+
+//!获得日志器管理类的单例对象
+#define LOG_GET_MANAGER Trluper::LoggerManager::getSingle()
 
 namespace Trluper{
 

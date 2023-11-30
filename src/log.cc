@@ -249,7 +249,7 @@ std::stringstream &LogEventWrap::getSS()
 Logger::Logger(const std::string &name):m_name(name),m_level(LogLevel::DEBUG)
 {
     //默认的格式化模板
-    m_formatter.reset(new LogFormatter("%d{%Y-%m-%d %H:%M:%S}%T%t%T%N%T[%p]%T[%c]%T%f:%l(in %F) : %m%n"));
+    m_formatter.reset(new LogFormatter("%d{%Y-%m-%d %H:%M:%S} [%c][%p] %t(%N) %f (in %F: %l): %m%n"));
 }
 
 void Logger::log(LogLevel::Level level, LogEvent::ptr event)

@@ -1,3 +1,8 @@
 [2023-11-30 15:48:23]-[DEBUG]-/home/project/Trluper/test/main.cc: 
 [2023-11-30 15:53:48]-[DEBUG]-/home/project/Trluper/test/main.cc: Hello Trluper log
 [2023-11-30 16:01:03]-[ERROR]-/home/project/Trluper/test/main.cc: ERROR IN LINE 61
+2023-11-30 20:58:22-[ERROR]-30596-[Trluper]-[root]	/home/project/Trluper/test/main.cc(inmain: 61): ERROR IN LINE 61
+2023-11-30 21:04:45 [root][ERROR] 30841(Trluper)-	/home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
+2023-11-30 21:05:37 [root][ERROR] 30960(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
+2023-11-30 21:33:05 [root][ERROR] 31831(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
+2023-11-30 21:35:21 [root][ERROR] 32068(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
