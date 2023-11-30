@@ -39,7 +39,7 @@
 namespace Trluper{
 
 class Connections;
-class DataProcess;
+class DataProcess;  
 class AbstractFactory;
 class UserMsg;
 class ThreadPool;

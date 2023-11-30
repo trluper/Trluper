@@ -27,9 +27,10 @@ add_executable(Server
   src/threadPool.cc
   src/timer.cc
   src/util.cc
+  src/log.cc
 )
 
-target_link_libraries(Server PRIVATE jsoncpp pthread)
+target_link_libraries(Server PRIVATE jsoncpp pthread yaml-cpp)
 
 
 
