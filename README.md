@@ -200,5 +200,91 @@ public:
 
 **上述的具体实现可看`TEST`目录下的源文件**
 
-# 日志系统的使用
+# 日志系统
+Trluper框架还配备了类似log4j风格的日志系统，即主要由日志器`logger`、`Appender`和`Formatter`构成：
+- `logger`：日志器，**制日志的输出级别（默认为`DEBUG`最低级别）、输出格式和输出目的地**。`logger`支持含有多个`Appender`输出地。
+- `Appender`：**控制日志被写入的目的地**，本框架实现了标准输出`StdoutLogAppender`和文件输出目的地`FileLogAppender`。
+- `Formatter`：**用于定义日志输出的格式**。，其支持14种格式解析：
+```
+%m 消息
+%p 日志级别
+%r 累计毫秒数
+%c 日志器名称
+%t 线程id
+%N 线程名称
+%C 协程ID
+%n 换行
+%d 时间
+%f 文件名
+%F 函数名称 
+%l 行号
+%T 制表符
+%% %
 
+日志默认格式: "%d{%Y-%m-%d %H:%M:%S} [%c][%p] %t(%N) %f (in %F: %l): %m%n"
+```
+- `LogLevel`：日志级别一共分为`UNKNOW,DEBUG,INFO,WARN,ERROR,FATAL`六个级别，只有当日志事件等级大于等于当前日志器事件等级时才会输入到输出地。
+
+## 日志系统的使用
+该日志系统支持**流式写入**和**格式写入**两种，并搭配了各自的宏使用这两种形式的日志写入:
+```
+//流式写入
+LOG_SS_DEBUG(logger) 	//DEBUG级别
+LOG_SS_INFO(logger) 	//INFO级别
+LOG_SS_WARN(logger) 	//WARN级别
+LOG_SS_ERROR(logger)	//ERROR级别
+LOG_SS_FATAL(logger) 	//FATAL级别
+//格式写入
+LOG_FMT_DEBUG(logger,fmt,...) 	//DEBUG级别
+LOG_FMT_INFO(logger,fmt,...) 	//INFO级别
+LOG_FMT_WARN(logger,fmt,...) 	//WARN级别
+LOG_FMT_ERROR(logger,fmt,...) 	//ERROR级别
+LOG_FMT_FATAL(logger,fmt,...) 	//FATAL级别
+```
+### 快速开始
+以下是一个展示日志系统使用的简单示例
+```
+#include "log.h"
+int main(){
+	Trluper::LogggerManager* manager = LOG_GET_MANAGER(); //获取日志器管理类的单例对象的宏
+	Trluper::Logger::ptr mainLogger = manager->getMainLogger();//获得主日志器，日志系统默认会创建一个名为root的主日志器
+	std::string path = "../Log/log.txt";
+	//创建一个FileLogAppender
+	Trluper::LogAppender::ptr p(new Trluper::FileLogAppender(path));
+	//设置p的日志等级为ERROR，即只有大于等于ERROR的日志事件才会写入文件log.txt中
+	p->setLogLevel(Trluper::LogLevel::ERROR);
+	//为该日志器添加一个FileLogAppender（默认拥有一个StdoutLogAppender)
+	mainLogger->addAppender(p);
+	//流式写入日志
+	LOG_SS_DEBUG(mainLogger)<<"Hello Trluper log";
+	LOG_SS_ERROR(mainLogger)<<"ERROR in line 61";
+	//格式化写入日志
+	LOG_FMT_DEBUG(mainLogger,"This is %s, Line:%d","Trluper log",61);
+	return 0;
+}
+```
+
+## 使用注意
+ 1. 你可使用`manager->getLogger(name)`创建你自己的日志器，他会返回一个`Logger::ptr`类型的值，我们定义为`mylogger`
+ 2. 在你进行写入日志内容前，你需要为`mylogger`添加输出地`Appender`（本框架实现了标准输出`StdoutLogAppender`和文件输出目的地`FileLogAppender`,你也可以自定义实现`Appender`)，同时为定义输出格式`Formatter`。
+	1. 添加输出地：`addAppender()`函数
+	2. 删除输出的：`delAppender`
+	3. 情况输出地：`clearAppenders`
+	4. 设置格式模板由两个重载函数：`setFormatter`。**注意：logger调用`setFormatter`设置的格式模板会将其拥有有的`Appenders`的格式模板都设置.**
+ 3. 你可以调用`setLogLevel`设置`mylogger`的日志级别，**注意：logger调用`setLogLevel`设置的日志级别会将其拥有有的`Appenders`的日志级别都设置为该级别.
+ 4. 若不想Logger中所有的`Appender`都统一设置`level`和`Formatter`，可以调用`Appender`的`setFormatter`和`setLogLevel`进行独立设置，此时日志的写入会依据`Appender`的设置决定是否写入，以什么格式写入。
+
+ # 封装线程、锁、信号量
+ 框架集成封装POSIX的**互斥锁、读写锁、自旋锁、原子锁、信号量**，同时利用RAII机制实现了`Lockguard`模板类：
+ - `Mutex`：自旋锁封装实现
+ - `RWMutex`：读写锁封装实现
+ - `SpainLock`：自旋锁封装实现
+ - `CASlock`：原子锁封装实现
+ - `Semaphore`：信号量的封装实现
+ - `Lockguard`：适用于互斥锁、自旋锁、原子锁
+ - `ReadLockguard`：只适用于读写锁的读锁
+ - `WriteLockguard`：只适用于读写锁的写锁
+
+ # 定时器
+
+ # 线程封装和线程池管理器
