@@ -1,0 +1,3 @@
+[2023-11-30 15:48:23]-[DEBUG]-/home/project/Trluper/test/main.cc: 
+[2023-11-30 15:53:48]-[DEBUG]-/home/project/Trluper/test/main.cc: Hello Trluper log
+[2023-11-30 16:01:03]-[ERROR]-/home/project/Trluper/test/main.cc: ERROR IN LINE 61

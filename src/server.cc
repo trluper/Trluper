@@ -4,7 +4,7 @@ namespace Trluper{
     
 Server* Server::singleServer = nullptr;
 
-/// @brief调用构造函数Server()和Init(),创建服务器socket，并执行绑定、监听功能，调用init()进行epoll上树操作
+/// @brief 调用构造函数Server()和Init(),创建服务器socket，并执行绑定、监听功能，调用init()进行epoll上树操作
 /// @param ip ：ip地址
 /// @param port ：端口号
 Server *Server::ServerInit(std::string& path ,AbstractFactory* _singleFactory,bool multiThread)

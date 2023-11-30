@@ -17,7 +17,7 @@ public:
     virtual ~Router(){};
     /*依据数据处理层转化成的请求，获得业务对象*/
     virtual FApplycations* GetFApplycationsObj(Request* request) = 0;
-    /*r如果路由表中改业务对象为nullptr,则需要创建*/
+    /*r如果路由表中该业务对象为nullptr,则需要创建*/
     virtual void CreatApplycationsObj(Request* request) = 0;
 };
 
