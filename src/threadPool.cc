@@ -1,13 +1,13 @@
 #include "threadPool.h"
 
 namespace Trluper{
-    ThreadPool::ThreadPool(int worker_nums, int max_handle):m_worker_nums(worker_nums),m_max_handle(max_handle)
+    ThreadPool::ThreadPool(size_t worker_nums, size_t max_handle):m_worker_nums(worker_nums),m_max_handle(max_handle)
     {
         if(worker_nums<=0||max_handle<=0){
             throw std::exception();
         }
         std::function<void*(void*)> _work(work);
-        for(int i = 0;i<worker_nums;++i){
+        for(size_t i = 0;i<worker_nums;++i){
             std::string name="Trluper-"+std::to_string(i);
             Thread* thread = new Thread(_work,this,name);
             m_workers.push_back(thread);

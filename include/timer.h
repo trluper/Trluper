@@ -51,7 +51,7 @@ public:
     void callBack(){m_cb(m_arg);}
 private:
     /// @brief 重新设置定时器在时间轮的哪一级,哪一可刻度上
-    bool refresh();
+    void refresh();
 private:
     /**
     * @brief 私有化构造函数
@@ -71,7 +71,7 @@ private:
     uint64_t m_ms = 0;
     //回调函数
     std::function<void(void*)> m_cb;
-    void* m_arg;
+    void* m_arg = nullptr;
     //定时器管理器
     TimerManager* m_manager = nullptr;
 };
@@ -85,7 +85,7 @@ public:
     /// @param workScale 工作轮的刻度数量
     /// @param secondScale 二级轮的刻度数量
     /// @param precisionMs 时间轮的精度，也是允许定时器的最小定时间隔
-    TimerManager(int workScale,int secondScale,int precisionMs);
+    TimerManager(uint32_t workScale,uint32_t secondScale,uint64_t precisionMs);
     
     virtual ~TimerManager();
     
@@ -111,18 +111,18 @@ private:
     std::vector<std::vector<std::list<Timer::ptr>>> m_secondWheel;
     
     //时间轮的刻度
-    int m_workScale;
-    int m_secondScale;
+    uint32_t m_workScale;
+    uint32_t m_secondScale;
     
     //时间轮此时指针所在刻度
-    int m_workPtr = 0;
-    int m_secondPtr = 0;
+    uint32_t m_workPtr = 0;
+    uint32_t m_secondPtr = 0;
     
     //上一次执行的时间
     uint64_t m_previouseTime = 0;
     
     //时间轮精度(时间轮的粒度)
-    int m_precisonMs;
+    uint64_t m_precisonMs;
     
     //读写锁
     RWMutex m_mutex;

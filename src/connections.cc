@@ -36,7 +36,7 @@ inline bool Connections::writeFd(std::string &_output)
     bool ret = false;
     char *_outbuf = (char*)calloc(1UL,_output.size());
     _output.copy(_outbuf,_output.size());
-    if(dataFd>=0 && (_output.size() == send(dataFd,_outbuf,_output.size(),0))){
+    if(dataFd>=0 && (_output.size() == (size_t)(send(dataFd,_outbuf,_output.size(),0)))){
         std::cout<<"send to client:"<<dataFd<<", packetSize: "<<_output.size()<<std::endl;
         ret = true;
     }

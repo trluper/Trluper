@@ -195,8 +195,8 @@ LogLevel::Level LogLevel::FromString(const std::string &str)
 LogEvent::LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level
         , const char *file, const char* func,uint32_t line, uint32_t elapse, uint32_t threadId
         , uint32_t coroutineId, uint64_t time, const std::string &threadName)
-    : m_logger(logger),m_level(level),m_file(file),m_funcName(func),m_line(line),m_elapse(elapse),
-    m_threadID(threadId),m_coroutineID(coroutineId),m_time(time),m_threadName(threadName)
+    : m_file(file),m_funcName(func),m_line(line),m_elapse(elapse),
+    m_threadID(threadId),m_coroutineID(coroutineId),m_time(time),m_threadName(threadName),m_logger(logger),m_level(level)
 { 
 
 }
@@ -378,7 +378,7 @@ LoggerManager::LoggerManager(const LoggerManager &manager)
 }
 const LoggerManager &LoggerManager::operator=(const LoggerManager &single)
 {
-    // TODO: 在此处插入 return 语句
+   return *this;
 }
 LoggerManager::~LoggerManager()
 {
@@ -628,7 +628,7 @@ void LogFormatter::init()
         }
         //std::cout<< m_items.size()<<std::endl;
         std::cout<<"Log pattern string initial successfully."<<std::endl;
-    }catch(Trluper::LogException e){
+    }catch(Trluper::LogException& e){
         std::cout<<e<<std::endl;
         exit(1);
     }

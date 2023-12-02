@@ -11,7 +11,7 @@ private:
     Factory();
     ~Factory(); 
     Factory(const Factory& obj){}
-    Factory& operator=(const Factory& obj){}
+    Factory& operator=(const Factory& obj){return *this;}
 public:
     static Trluper::AbstractFactory* GetSingle();
     virtual Trluper::Connections* CreateAllObjWhenAccept(int _dataFd) override;

@@ -42,7 +42,7 @@
 - `FApplycations`应用层：**由应用开发者实现一些业务应用**。也可配备路由模块`Router`执行业务路由寻址。
 
 ## 三层需实现的纯虚函数
-开发者要使用该框架，**必须**继承这三层并至少实现以下纯虚函数：
+开发者若要使用该框架，**必须**继承实现这三层并至少实现以下**纯虚函数**：
 - `Connections`连接层：只需要实现一个纯虚函数：**`GetDataProcessObj(Message& msg)`**。
 	- `virtual DataProcess* GetDataProcessObj(Message& msg)`:返回一个`DataProcess*`对象指针。
 - `Dataprocess`数据处理层：需要实现`GetConnectionsObj`、`GetApplycationsObj`、`MsgToRequest`、`RequestToMsg`四个纯虚函数:
@@ -265,14 +265,14 @@ int main(){
 ```
 
 ## 使用注意
- 1. 你可使用`manager->getLogger(name)`创建你自己的日志器，他会返回一个`Logger::ptr`类型的值，我们定义为`mylogger`
+ 1. 你可使用`manager->getLogger(name)`创建你自己的日志器，他会返回一个`Logger::ptr`类型的值，这里我们定义为`mylogger`
  2. 在你进行写入日志内容前，你需要为`mylogger`添加输出地`Appender`（本框架实现了标准输出`StdoutLogAppender`和文件输出目的地`FileLogAppender`,你也可以自定义实现`Appender`)，同时为定义输出格式`Formatter`。
 	1. 添加输出地：`addAppender()`函数
 	2. 删除输出的：`delAppender`
-	3. 情况输出地：`clearAppenders`
+	3. 清除输出地：`clearAppenders`
 	4. 设置格式模板由两个重载函数：`setFormatter`。**注意：logger调用`setFormatter`设置的格式模板会将其拥有有的`Appenders`的格式模板都设置.**
- 3. 你可以调用`setLogLevel`设置`mylogger`的日志级别，**注意：logger调用`setLogLevel`设置的日志级别会将其拥有有的`Appenders`的日志级别都设置为该级别.
- 4. 若不想Logger中所有的`Appender`都统一设置`level`和`Formatter`，可以调用`Appender`的`setFormatter`和`setLogLevel`进行独立设置，此时日志的写入会依据`Appender`的设置决定是否写入，以什么格式写入。
+ 3. 你可以调用`setLogLevel`设置`mylogger`的日志级别，**注意：logger调用`setLogLevel`设置的日志级别会将其拥有有的`Appenders`对象的日志级别都设置为该级别.**
+ 4. 若不想Logger中所有的`Appender`都统一设置`level`和`Formatter`，可以调用`Appender`的`setFormatter`和`setLogLevel`进行独立设置，此时日志的写入会依据`Appender`的设置级别和格式器决定是否写入，以什么格式写入。
 
  # 封装线程、锁、信号量
  框架集成封装POSIX的**互斥锁、读写锁、自旋锁、原子锁、信号量**，同时利用RAII机制实现了`Lockguard`模板类：
@@ -286,5 +286,65 @@ int main(){
  - `WriteLockguard`：只适用于读写锁的写锁
 
  # 定时器
+ 框架也自带搭配了定时器`Timer`；同时实了二级时间轮管理器`TimerManager`，可支持自定义设定工作轮的时间精度`m_precisonMs`和刻度数量`m_workScale`,同样也支持自定义设定二级轮的刻度数量`m_secondScale`。
 
- # 线程封装和线程池管理器
+## 主要属性和接口
+- 定时器`Timer`类：
+	- 构造函数`Timer(uint64_t ms,std::function<void(void*)>cb,void* arg,bool recurring,TimerManager* manager);`
+		 - `ms`：定时器触发时间间隔
+		 - `cb`：回调函数
+		 - `arg`：参数
+		 - `recurring`：是否循环触发
+		 - `manager`：时间管理器对象
+- 时间管理器`TimerManager`：
+	- `addTimer`：定时器添加
+	- `listExpiredCb`：从工作轮上获得需要执行的定时器列表
+	- `getNextTimer`；得到下一个最近的定时器执行时间
+
+## 开始开始
+以下是定时器Timer的使用示例
+```
+#include "timer.h"
+
+void timerTest(void* arg){
+
+   std::cout<<"Timer Test,当前时间："<<clock()/CLOCKS_PER_SEC<<std::endl;
+}
+
+void test(){
+    uint64_t ms = Trluper::GetCurrentMs();
+    sleep(2);
+    ms=Trluper::GetCurrentMs()-ms;
+    std::cout<<ms<<std::endl;
+
+    Trluper::TimerManager manager(4,3,2000);
+    std::function<void(void*)> cb(timerTest);
+    manager.addTimer(10000,cb,NULL,true);
+    //manager.addTimer(2000,cb,NULL,true);
+    //manager.addTimer(120000,cb,NULL,true);
+    while(true){
+        sleep(2);
+        std::list<Trluper::Timer::ptr> tlist;
+        manager.listExpiredCb(tlist);
+        for(auto p:tlist){
+            p->callBack();
+            if(p->isRecur()){
+                p->resetTimer(false,2000);
+            }
+        }
+    }
+}
+
+int main(){
+    test();
+    return 0;
+}
+```
+
+ # 线程封装和线程池管理器（只支持对epoll事件的任务处理）
+框架提高对POSIX线程函数的封装`Thread`，以及针对封装线程实现了一个线程池管理器`ThreadPool`。目前`ThreadPool`只支持对`epoll`事件的处理
+
+- 我们实现了对`pthread_create`、`pthread_detach`、`pthread_join`、`pthread_self`等一些常用函数的封装
+
+- 我们使用互斥锁`Mutex`、信号量`Semphore`和任务队列`task_queue`以及线程程池`m_workers`实现线程池管理器`ThreadPool`
+

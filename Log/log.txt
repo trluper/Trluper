@@ -6,3 +6,6 @@
 2023-11-30 21:05:37 [root][ERROR] 30960(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
 2023-11-30 21:33:05 [root][ERROR] 31831(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
 2023-11-30 21:35:21 [root][ERROR] 32068(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
+2023-12-01 19:50:58 [root][ERROR] 10437(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
+2023-12-01 19:51:27 [root][ERROR] 10542(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
+2023-12-01 19:52:44 [root][ERROR] 10784(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
