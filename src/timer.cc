@@ -5,12 +5,13 @@ namespace Trluper{
 bool Timer::resetTimer(bool reset, uint64_t ms, bool from_now)
 {
     if(reset) this->m_ms=ms;
-    return refresh();
+    refresh();
+    return true;
 }
 
-bool Timer::refresh()
+void Timer::refresh()
 {
-    int slots = this->m_ms/m_manager->m_precisonMs;
+    uint32_t slots = this->m_ms/m_manager->m_precisonMs;
     if(slots<m_manager->m_workScale){
         slots = (slots+m_manager->m_workPtr)%m_manager->m_workScale;
         m_manager->m_workWheel[slots].push_back(shared_from_this());
@@ -25,15 +26,15 @@ bool Timer::refresh()
 
 
 Timer::Timer(uint64_t ms, std::function<void(void *)> cb, void* arg,bool recurring, TimerManager *manager):
-    m_ms(ms),m_cb(cb),m_arg(arg),m_recurring(recurring),m_manager(manager){
+    m_recurring(recurring),m_ms(ms),m_cb(cb),m_arg(arg),m_manager(manager){
      
 }
 
-TimerManager::TimerManager(int workScale,int secondScale,int precisionMs):
+TimerManager::TimerManager(uint32_t workScale,uint32_t secondScale,uint64_t precisionMs):
     m_workScale(workScale),m_secondScale(secondScale),m_precisonMs(precisionMs){
     m_workWheel.resize(m_workScale);
     m_secondWheel.resize(m_secondScale);
-    for(int i = 0;i<m_secondScale;++i){
+    for(uint32_t i = 0;i<m_secondScale;++i){
         m_secondWheel[i].resize(m_workScale);
     }
     m_previouseTime = Trluper::GetCurrentMs();
@@ -59,6 +60,7 @@ Timer::ptr TimerManager::addTimer(uint64_t ms, std::function<void(void *)> cb,vo
     catch(const std::exception& e)
     {
         std::cout<<"创建定时器失败，定时间隔小于最小定时精度："<<m_precisonMs<<"ms"<<std::endl;
+        return nullptr;
     }
 }
 
@@ -66,9 +68,9 @@ uint64_t TimerManager::getNextTimer()
 {
     ReadLockguard<RWMutex> readlock(m_mutex);
     uint64_t ms = m_precisonMs*m_workScale+5;
-    int count = 0;
-    for(int i = 0;i<m_workScale;++i){
-        int index = (i+m_workPtr)%m_workScale;
+    uint32_t count = 0;
+    for(uint32_t i = 0;i<m_workScale;++i){
+        uint32_t index = (i+m_workPtr)%m_workScale;
         if(m_workWheel[index].empty()){
             ++count;
             continue;
@@ -88,18 +90,18 @@ void TimerManager::listExpiredCb(std::list<Timer::ptr> &tlist)
     uint64_t ms = Now-m_previouseTime;
     if(ms>=m_precisonMs){
         m_previouseTime = Now;
-        int slots = ms/m_precisonMs;
-        for(int i = 1;i <= slots;++ i){
+        uint32_t slots = ms/m_precisonMs;
+        for(uint32_t i = 1;i <= slots;++ i){
             if(!m_workWheel[(m_workPtr+i)%m_workScale].empty()){
                 std::list<Timer::ptr> temp(std::move(m_workWheel[(m_workPtr+i)%m_workScale]));
                 //*该方法虽然为O(1)时间复杂度，但在大量数据情况下仍有会出现耗时，后续可以自己实现一个list来优化
                 tlist.splice(tlist.end(),temp,temp.begin(),temp.end());
             }
         }
-        int addSlot = m_workPtr+slots;
+        uint32_t addSlot = m_workPtr+slots;
         m_workPtr = (addSlot)%m_workScale;
         if(addSlot>=m_workScale){
-            for(int i = 0;i<m_workScale;++i){
+            for(uint32_t i = 0;i<m_workScale;++i){
                 std::list<Timer::ptr> temp(std::move(m_secondWheel[m_secondPtr][i]));
                 m_workWheel[i].splice(m_workWheel[i].end(),temp,temp.begin(),temp.end());
             }
@@ -112,13 +114,13 @@ void TimerManager::listExpiredCb(std::list<Timer::ptr> &tlist)
 bool TimerManager::hasTimer()
 {
 
-    for(int i = 0;i < m_workScale;++i){
+    for(uint32_t i = 0;i < m_workScale;++i){
         if(!m_workWheel[i].empty()){
              return true;
         }
     }
-    for(int i = 0;i<m_secondScale;++i){
-        for(int j = 0;i<m_workScale;++j){
+    for(uint32_t i = 0;i<m_secondScale;++i){
+        for(uint32_t j = 0;i<m_workScale;++j){
             if(!m_secondWheel[i][j].empty()) return true;
         }
     }

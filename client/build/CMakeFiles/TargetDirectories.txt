@@ -1,0 +1,3 @@
+/home/project/Trluper/client/build/CMakeFiles/client.dir
+/home/project/Trluper/client/build/CMakeFiles/edit_cache.dir
+/home/project/Trluper/client/build/CMakeFiles/rebuild_cache.dir

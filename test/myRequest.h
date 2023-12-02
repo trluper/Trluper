@@ -31,7 +31,7 @@ public:
     std::list<MyRequest*> lRequest;
 };
 
-MyRequest::MyRequest(REQUEST_TYPE _type, std::string str):requestType(_type),ret(str)
+MyRequest::MyRequest(REQUEST_TYPE _type, std::string str):ret(str),requestType(_type)
 {
     
 }

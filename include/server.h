@@ -111,11 +111,9 @@ class AbstractFactory{
 protected:
     AbstractFactory(){}
     AbstractFactory(const AbstractFactory& obj){}
-    AbstractFactory& operator=(const AbstractFactory& obj){}
+    AbstractFactory& operator=(const AbstractFactory& obj){return *this;}
 public:
     virtual ~AbstractFactory(){};
-    //开发者需要重写的函数，一个是覆盖静态函数GetSingle，一个是重写虚函数CreateAllObjWhenAccept
-    static AbstractFactory* GetSingle(){}
     virtual Connections* CreateAllObjWhenAccept(int _dataFd) = 0;
 };
 

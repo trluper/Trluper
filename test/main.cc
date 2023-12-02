@@ -60,12 +60,12 @@ int main(){
     LOG_SS_DEBUG(mainLogger)<<"Hello Trluper log";
     LOG_SS_ERROR(mainLogger)<<"ERROR IN LINE 61";
     LOG_FMT_DEBUG(mainLogger,"This is %s, Line:%d","Trluper log",61);
-    /*
+    
     //C/S回显测试代码
     std::string configPath = "/home/project/Trluper/config/config.json";
     Trluper::AbstractFactory* factorySingle = Factory::GetSingle();
     Trluper::Server::ServerExceptionStop();
     Trluper::Server::ServerInit(configPath,factorySingle);
     Trluper::Server::ServerRun();
-    */
+    
 }

@@ -18,7 +18,7 @@
 #include <fstream>
 #include <vector>
 #include <stdarg.h>
-#include <map>
+#include <unordered_map>
 #include <functional>
 #include <yaml-cpp/yaml.h>
 #include "util.h"

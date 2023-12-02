@@ -72,7 +72,7 @@ Trluper::Request *MyDataProcess::MsgToRequest(Trluper::Message& msg)
         id |= str[1]<<8;
         id |= str[2]<<16;
         id |= str[3]<<24;
-        int bytelength = 0;
+        size_t bytelength = 0;
         bytelength |= str[4]<<0;
         bytelength |= str[5]<<8;
         bytelength |= str[6]<<16;

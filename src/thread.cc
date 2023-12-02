@@ -14,7 +14,7 @@ namespace Trluper{
         //创建线程，当前的线程回调函数为run，run内部调用m_cb，传入的参数为this
         int ret = pthread_create(& m_thread,nullptr,& Thread::run,this);
         if(ret){
-            printf("Thread error:% s\n",strerror(ret));
+            printf("Thread error:%s\n",strerror(ret));
             throw std::exception();
         }
     }
@@ -29,7 +29,7 @@ namespace Trluper{
         if(m_thread){
             int ret = pthread_join(m_thread,nullptr);
             if(ret){
-                printf("join:% s\n",strerror(ret));
+                printf("join:%s\n",strerror(ret));
                 throw std::exception();
             }
             m_thread = 0;
