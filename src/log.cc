@@ -367,10 +367,6 @@ std::string Logger::toYAMLString()
 //! LoggerManager类函数定义
 LoggerManager::LoggerManager()
 {
-    m_mainLogger.reset(new Logger());//主日志器（日志器管理类默初始化一主日志器）
-    m_mainLogger->addAppender(LogAppender::ptr(new StdoutLogAppender()));//主日志器的appender
-    m_mapOfLoggers[m_mainLogger->m_name] = m_mainLogger;//建立name与日志器的映射
-
     init();
 }
 LoggerManager::LoggerManager(const LoggerManager &manager)
@@ -386,10 +382,10 @@ LoggerManager::~LoggerManager()
 }
 
 
-Logger::ptr LoggerManager::getLogger(const std::string &name)
+Logger::ptr LoggerManager::getLogger(const std::string &&name)
 {
     Trluper::Lockguard<Spinlock> Lock(m_spinlock);
-    if(m_mapOfLoggers.count(name) != 0){
+    if(existLogger(name)){
         return m_mapOfLoggers[name];
     }
     Logger::ptr logger(new Logger(name));
@@ -399,7 +395,11 @@ Logger::ptr LoggerManager::getLogger(const std::string &name)
 }
 
 void LoggerManager::init()
-{
+{   //初始化一个root主日志器，Appender为StdoutLogAppende
+    m_mainLogger.reset(new Logger());//主日志器（日志器管理类默初始化一主日志器）
+    m_mainLogger->addAppender(LogAppender::ptr(new StdoutLogAppender()));//主日志器的appender
+    m_mapOfLoggers[m_mainLogger->m_name] = m_mainLogger;//建立name与日志器的映射
+
 }
 
 //toYAMLString调用路径：LoggerManager->Logger->Appender

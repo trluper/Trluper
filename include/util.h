@@ -17,6 +17,8 @@
 #include <fstream>
 #include <yaml-cpp/yaml.h>
 #include <iomanip>
+#include <execinfo.h>
+#include "log.h"
 
 namespace Trluper{
 
@@ -56,6 +58,14 @@ public:
     static bool OpenForRead(std::ifstream& ifs, const std::string& filename,std::ios_base::openmode mode);
     static bool OpenForWrite(std::ofstream& ofs, const std::string& fileame,std::ios_base::openmode mode);
 };
+
+
+/// @brief 当程序出现崩溃等异常时，会接收到内核发送给进程/线程/协程的异常信号，收到异常信号后，可以在处理信号的时候将程序的堆栈信息打印出来，以便于程序调试。
+/// @param bt 堆栈信息
+/// @param size 可存储堆栈信息得最大个数
+/// @param skip 前skip个不输出
+bool BackTrace(std::vector<std::string>& bt, int size, int skip);
+std::string BackTraceString(int size, int skip = 2);
 
 }
 #endif

@@ -1,3 +1,53 @@
+# 环境和测试操作
+本服务器框架基于Linux\C++11实现，快速测试步骤：
+- 编译框架源文件：会生成对应得`libTrluper.so`库文件和各可执行文件
+```
+cd TEST
+cmake ..
+make
+```
+
+- 生成客户端可执行文件
+```
+cd client\build
+cmake ..
+make
+```
+
+
+- 执行可执行文件,在`TEST`目录启动测试服务器`./Server`;在client/build启动client`./client`
+    - Server: 
+```
+trluper@Trluper:/home/project/Trluper/TEST$ ./Server 
+Log pattern string initial successfully.
+2023-12-04 10:25:08 [root][DEBUG] 27176(Trluper) /home/project/Trluper/test/main.cc (in main: 60): Hello Trluper log
+2023-12-04 10:25:08 [root][ERROR] 27176(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
+2023-12-04 10:25:08 [root][DEBUG] 27176(Trluper) /home/project/Trluper/test/main.cc (in main: 62): This is Trluper log, Line:61
+The configuration file was read successfully.
+Configure the following server attributes:
+Server Host:  172.21.163.218
+Server port: 8080
+Number of child thread is: 8
+Request cache maximum is: 8000
+新的客户端连接,ip：172.21.163.218
+<------------------------------------------------------------->
+Type is: 1
+recvfrom client: 你好
+send to client:8, packetSize: 14
+Type is: 2
+recvfrom client: 我在. lenSize: 6
+send to client:8, packetSize: 14
+```
+
+
+```
+trluper@Trluper:/home/project/Trluper/client/build$ ./client 
+1 你好
+你好
+2 我在
+我在
+```
+
 # 目录结构
 - **目录结构介绍：**
 	- `include`：框架声明的头文件，后续所有的抽象类和继承类头文件
@@ -274,6 +324,29 @@ int main(){
  3. 你可以调用`setLogLevel`设置`mylogger`的日志级别，**注意：logger调用`setLogLevel`设置的日志级别会将其拥有有的`Appenders`对象的日志级别都设置为该级别.**
  4. 若不想Logger中所有的`Appender`都统一设置`level`和`Formatter`，可以调用`Appender`的`setFormatter`和`setLogLevel`进行独立设置，此时日志的写入会依据`Appender`的设置级别和格式器决定是否写入，以什么格式写入。
 
+## 当前所有日志器的配置情况
+日志系统配备了YAML以快速获取日志系统目前的所有配置情况：
+- 日志管理器对象`manager->->toYAMLString()`即可获得当前配置,示例`LOG_SS_DEBUG(mainLogger)<<"\n"<<lm->toYAMLString();`:
+```
+2023-12-04 18:13:17 [root][DEBUG] 748(Trluper) /home/project/Trluper/test/test_log.cc (in main: 19): 
+- name: system
+  level: DEBUG
+  formatter: "%d{%Y-%m-%d %H:%M:%S} [%c][%p] %t(%N) %f (in %F: %l): %m%n"
+  appenders:
+    - type: " FileLogAppender"
+      file: ../Log/log.txt
+      level: ERROR
+- name: root
+  level: DEBUG
+  formatter: "%d{%Y-%m-%d %H:%M:%S} [%c][%p] %t(%N) %f (in %F: %l): %m%n"
+  appenders:
+    - type: StdoutLogAppender
+      level: DEBUG
+    - type: " FileLogAppender"
+      file: ../Log/log.txt
+      level: ERROR
+```
+
  # 封装线程、锁、信号量
  框架集成封装POSIX的**互斥锁、读写锁、自旋锁、原子锁、信号量**，同时利用RAII机制实现了`Lockguard`模板类：
  - `Mutex`：自旋锁封装实现
@@ -301,7 +374,7 @@ int main(){
 	- `listExpiredCb`：从工作轮上获得需要执行的定时器列表
 	- `getNextTimer`；得到下一个最近的定时器执行时间
 
-## 开始开始
+## 快速开始
 以下是定时器Timer的使用示例
 ```
 #include "timer.h"

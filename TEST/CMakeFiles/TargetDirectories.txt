@@ -1,5 +1,0 @@
-/home/project/Trluper/TEST/CMakeFiles/Trluper.dir
-/home/project/Trluper/TEST/CMakeFiles/Server.dir
-/home/project/Trluper/TEST/CMakeFiles/timer.dir
-/home/project/Trluper/TEST/CMakeFiles/edit_cache.dir
-/home/project/Trluper/TEST/CMakeFiles/rebuild_cache.dir
