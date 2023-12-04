@@ -52,11 +52,18 @@ set(LIBS
     )
 
 
-add_executable(Server test/main.cc)
+add_executable(Server test/Server.cc)
 target_include_directories(Server PUBLIC test)
-target_link_libraries(Server ${LIBS})
+target_link_libraries(Server ${LIBS}) 
 
 add_executable(timer test/timer_test.cc)
 target_include_directories(timer PUBLIC test)
 target_link_libraries(timer ${LIBS})
 
+add_executable(log test/test_log.cc)
+target_include_directories(log PUBLIC test)
+target_link_libraries(log ${LIBS})
+
+add_executable(coroutine test/test_coroutine.cc)
+target_include_directories(coroutine PUBLIC test)
+target_link_libraries(coroutine ${LIBS})

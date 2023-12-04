@@ -404,6 +404,7 @@ public:
     void delAppender(LogAppender::ptr appender);
     /// @brief 情况日志输出去向对象
     void clearAppenders();
+    bool hashAppender()const{return !m_appenders.empty();}
     
     /// @brief 获取日志级别
     /// @return 日志级别
@@ -455,7 +456,11 @@ public:
     /// @brief 获取指定名称的日志器，如果还没有创建，则创建该日志器
     /// @param name ：日志器名称
     /// @return  Logger::ptr
-    Logger::ptr getLogger(const std::string& name);
+    Logger::ptr getLogger(const std::string&& name);
+    /// @brief 判断是否存在名字为name得日志器
+    /// @param name 
+    /// @return bool
+    bool existLogger(const std::string& name){return !(m_mapOfLoggers.count(name)==0);}
     /// @brief 初始化工作
     void init();
     /// @brief 获取主日志器

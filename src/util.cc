@@ -2,6 +2,8 @@
 #include "util.h"
 namespace Trluper{
 
+
+
 //!时间戳
 uint64_t GetCurrentMs(){
     struct timeval tv;
@@ -56,6 +58,35 @@ time_t Str2Time(const char *str, const char *format)
         return 0;
     }
     return mktime(&t);
+}
+
+//!获得堆栈信息
+bool BackTrace(std::vector<std::string> &bt, int size, int skip)
+{
+    void** array = (void**)malloc(sizeof(void*)*size);
+    int len = backtrace(array, size);
+    char** strings = backtrace_symbols(array, len);
+    if(NULL == strings){
+        free(array);
+        return false;
+    }
+    for(int i = skip; i < len ; ++i){
+        bt.push_back(strings[i]);
+    }
+    free(array);
+    free(strings);
+    return true;
+}
+
+std::string BackTraceString(int size, int skip)
+{
+    std::vector<std::string> bt;
+    BackTrace(bt, size, skip);
+    std::stringstream ss;
+    for(size_t i = 0; i< bt.size(); ++i){
+        ss<<bt[i]<<std::endl;
+    }
+    return ss.str();
 }
 
 //!文件操作

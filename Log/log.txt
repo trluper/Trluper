@@ -9,3 +9,12 @@
 2023-12-01 19:50:58 [root][ERROR] 10437(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
 2023-12-01 19:51:27 [root][ERROR] 10542(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
 2023-12-01 19:52:44 [root][ERROR] 10784(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
+2023-12-04 10:25:08 [root][ERROR] 27176(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
+2023-12-04 17:49:43 [root][ERROR] 31244(Trluper) /home/project/Trluper/test/main.cc (in main: 62): ERROR IN LINE 61
+2023-12-04 18:05:28 [root][ERROR] 32451(Trluper) /home/project/Trluper/test/test_log.cc (in main: 15): ERROR IN LINE 61
+2023-12-04 18:07:35 [root][ERROR] 32653(Trluper) /home/project/Trluper/test/test_log.cc (in main: 16): ERROR IN LINE 61
+2023-12-04 18:09:42 [root][ERROR] 32751(Trluper) /home/project/Trluper/test/test_log.cc (in main: 16): ERROR IN LINE 61
+2023-12-04 18:10:28 [root][ERROR] 464(Trluper) /home/project/Trluper/test/test_log.cc (in main: 16): ERROR IN LINE 61
+2023-12-04 18:10:28 [system][ERROR] 464(Trluper) /home/project/Trluper/test/test_log.cc (in main: 18): system test
+2023-12-04 18:13:17 [root][ERROR] 748(Trluper) /home/project/Trluper/test/test_log.cc (in main: 16): ERROR IN LINE 61
+2023-12-04 18:13:17 [system][ERROR] 748(Trluper) /home/project/Trluper/test/test_log.cc (in main: 18): system test 18
