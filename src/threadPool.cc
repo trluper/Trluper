@@ -1,10 +1,15 @@
 #include "threadPool.h"
 
 namespace Trluper{
+    static Logger::ptr logger = nullptr;
+
     ThreadPool::ThreadPool(size_t worker_nums, size_t max_handle):m_worker_nums(worker_nums),m_max_handle(max_handle)
     {
+        logger = LOG_GET_MANAGER->getMainLogger();
+        //LOG_SS_INFO(logger)<<"Initial threadpool worker_nums:"<< m_worker_nums<<" max_handle: "<<m_max_handle<<std::endl;
         if(worker_nums<=0||max_handle<=0){
-            throw std::exception();
+
+            LOG_SS_ERROR(logger)<<"Initial threadpool failed.Worker_nums or max_handle is less than zero."<<std::endl;
         }
         std::function<void*(void*)> _work(work);
         for(size_t i = 0;i<worker_nums;++i){

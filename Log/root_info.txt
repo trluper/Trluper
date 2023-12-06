@@ -1,0 +1,4 @@
+2023-12-06 14:16:00 [root][INFO] 25917(Trluper-0) /home/project/Trluper/src/server.cc (in ctlAcceptFd: 253): 新的客户端连接,ip：172.21.163.218
+
+2023-12-06 14:16:06 [root][INFO] 25920(Trluper-3) /home/project/Trluper/src/server.cc (in ctlCloseFd: 289): 客户端ip：172.21.163.218已断开链接
+

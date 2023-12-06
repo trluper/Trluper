@@ -26,6 +26,7 @@ if(yaml-cpp_FOUND)
 endif()
 
 
+
 # 添加可执行文件的目标，包括测试代码源文件和可执行文件的名称
 set(SOURCE_DIR
   src/message.cc
@@ -39,6 +40,7 @@ set(SOURCE_DIR
   src/timer.cc
   src/util.cc
   src/log.cc
+  src/mysqlpool.cc
 )
 
 add_library(Trluper SHARED ${SOURCE_DIR})
@@ -49,6 +51,7 @@ set(LIBS
     jsoncpp
     pthread
     yaml-cpp
+    mysqlclient
     )
 
 
@@ -67,3 +70,7 @@ target_link_libraries(log ${LIBS})
 add_executable(coroutine test/test_coroutine.cc)
 target_include_directories(coroutine PUBLIC test)
 target_link_libraries(coroutine ${LIBS})
+
+add_executable(mysql test/test_mysqlpool.cc)
+target_include_directories(mysql PUBLIC test)
+target_link_libraries(mysql ${LIBS})

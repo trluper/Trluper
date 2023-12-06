@@ -7,6 +7,7 @@
 #include "connections.h"
 #include "server.h"
 #include "mutex.h"
+#include "log.h"
 
 
 namespace Trluper{
