@@ -7,5 +7,5 @@
     "mysql_user":"trluper",
     "mysql_password":"123456",
     "mysql_port":3306,
-    "mysql_database":"trluper"
+    "mysql_database":"test"
 } 
