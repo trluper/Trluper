@@ -3,16 +3,30 @@
 namespace Trluper{
     
 Server* Server::singleServer = nullptr;
+LoggerManager* Server::logger_manager = nullptr;
+Logger::ptr Server::logger = nullptr;
 
 /// @brief 调用构造函数Server()和Init(),创建服务器socket，并执行绑定、监听功能，调用init()进行epoll上树操作
 /// @param ip ：ip地址
 /// @param port ：端口号
-Server *Server::ServerInit(std::string& path ,AbstractFactory* _singleFactory,bool multiThread)
+Server *Server::ServerInit(std::string& path , AbstractFactory* _singleFactory,bool multiThread)
 {
     if(nullptr==singleServer){
         //完美转发
         singleServer = new Server(path,_singleFactory,multiThread);//9/12
+        //日志器
+        singleServer->logger_manager = LOG_GET_MANAGER;
+        singleServer->logger = logger_manager->getLogger("root");
+        Trluper::LogAppender::ptr appender_error(new FileLogAppender("../Log/root_error.txt"));
+        appender_error->setLogLevel(LogLevel::ERROR);
+        Trluper::LogAppender::ptr appender_info(new FileLogAppender("../Log/root_info.txt"));
+        appender_info->setLogLevel(LogLevel::INFO);
+        logger->addAppender(appender_info);
+        logger->addAppender(appender_error);
     }
+    std::cout<<"--------------------Server's Log Configuration-------------"<<std::endl;
+    std::cout<<LOG_GET_MANAGER->toYAMLString()<<std::endl;
+    std::cout<<"--------------------Running Log info-----------------------"<<std::endl;
     return singleServer;
 }
 
@@ -42,7 +56,8 @@ void Server::ServerRun()
     if(nullptr!=singleServer){
         singleServer->run();
     }else{
-        std::cout<<"ServerRun failed, the value of singleServer is nullptr."<<std::endl;
+        LOG_SS_ERROR(logger)<<"ServerRun failed, the value of singleServer is nullptr."<<std::endl;
+        exit(1);
     }
 }
 
@@ -124,14 +139,17 @@ Server::Server(std::string& path, AbstractFactory* _singleFactory,bool multiThre
                 init();
             }
             else{
-                perror("Server start error: Listen");
+                LOG_SS_ERROR(logger)<<"Server start error: Listen."<<std::endl;
+                exit(1);
             }
         }else{
-            perror("Server start error: Bind");
+            LOG_SS_ERROR(logger)<<"Server start error: Bind."<<std::endl;
+            exit(1);
         }
 
     }else{
-        perror("Server start error: Get socket failed");
+        LOG_SS_ERROR(logger)<<"Server start error: Get socket failed"<<std::endl;
+        exit(1);
     }
     
     if(true == multiThread){
@@ -174,7 +192,8 @@ bool Server::init()
     if(0==epoll_ctl(epollfd,EPOLL_CTL_ADD,listenfd,&listenev)){
         bRet=true;
     }else{
-        perror("Server start error: Epoll init");
+        LOG_SS_ERROR(logger)<<"Server start error: Epoll init."<<std::endl;
+        exit(1);
     }
     return bRet;
 }
@@ -235,28 +254,32 @@ void Server::ctlAcceptFd()
     if(dataFd>=0){
         char ip[16];
         inet_ntop(AF_INET,&clientSocket.sin_addr.s_addr,ip,16);
-        std::cout<<"新的客户端连接,ip："<<ip<<std::endl;
+        LOG_SS_INFO(logger)<<"新的客户端连接,ip："<<ip<<std::endl;
         std::cout<<"<------------------------------------------------------------->"<<std::endl;
         //创建相应的连接层、数据层和业务层对象
         Connections* conn = singleFactory->CreateAllObjWhenAccept(dataFd);
         if(nullptr!=conn){
             m_ConnctionsMap[dataFd] = conn; //3/12
             struct epoll_event client;
+            //存储ip
+            conn->SetIP(ip);
             //边缘触发+EPOLLIN,EPOLLOUT后续要send的时候添加，使epoll_wait能够触发写操作
             client.events=EPOLLIN|EPOLLET;
             //*client.data.ptr可以作为dataFd的绑定通道
             client.data.ptr = conn;
-            if(-1==epoll_ctl(epollfd,EPOLL_CTL_ADD,dataFd,&client))
+            if(-1==epoll_ctl(epollfd,EPOLL_CTL_ADD,dataFd,&client)){
+                LOG_SS_ERROR(logger)<<"epoll_ctl error: client"<<std::endl;
                 perror("epoll_ctl error: client");
+            }
         }
         //创建conn失败，向客户端发送“Unknow error!”，直接close
         else{
             char buf[]="Unknow error!";
             send(dataFd,buf,sizeof(buf),MSG_DONTWAIT);
             close(dataFd);
-        }
-        
+        }     
     }else{
+        LOG_SS_ERROR(logger)<<"accept failed."<<std::endl;
         perror("accept:");
     }
     
@@ -266,7 +289,8 @@ void Server::ctlAcceptFd()
 /// @param dataFd:需要关闭的套接字
 void Server::ctlCloseFd(struct epoll_event& ev)
 {
-    Connections* conn = (Connections*)ev.data.ptr; 
+    Connections* conn = (Connections*)ev.data.ptr;
+    LOG_SS_INFO(logger)<<"客户端ip："<<conn->GetIP()<<"已断开链接"<<std::endl;
     m_ConnctionsMap.erase(ev.data.fd);
     epoll_ctl(epollfd,EPOLL_CTL_DEL,ev.data.fd,&ev);
     close(ev.data.fd);

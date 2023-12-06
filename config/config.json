@@ -1,6 +1,11 @@
 {
-    "ip":" 172.21.163.218",
+    "ip":"172.21.163.218",
     "port":8080,
     "thread_nums":8,
-    "max_handle":8000
-}
+    "max_handle":8000,
+    "mysql_host":"172.21.163.218",
+    "mysql_user":"trluper",
+    "mysql_password":"123456",
+    "mysql_port":3306,
+    "mysql_database":"trluper"
+} 

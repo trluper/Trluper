@@ -346,6 +346,7 @@ public:
 class FileLogAppender : public LogAppender{
 public:
     typedef std::shared_ptr<FileLogAppender> ptr;
+    FileLogAppender(const std::string&& filename);
     FileLogAppender(const std::string& filename);
     void log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
     std::string toYAMLString() override;

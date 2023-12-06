@@ -23,7 +23,6 @@
 #include "config.h"
 
 
-
 /*
  * @Author: wuwenjie wenjiewu2017@163.com
  * @Date: 2023-09-14 20:11:48
@@ -47,7 +46,7 @@ class ThreadPool;
 class Server{
 public:
     /*初始化一个服务器单例对象，提供服务的开始，内部其实纠错创建绑定监听socket、并将socker上树*/
-    static Server* ServerInit(std::string& path, AbstractFactory* _singleFactory,bool multiThread = true);
+    static Server* ServerInit(std::string& path, AbstractFactory* _singleFactory, bool multiThread = true);
     /*信号的捕捉，有时候我们停止服务器是在发生异常或者输入ctrl+c:SIGINT、ctrl+z:SIGSTOP、ctrl+\:SIGQUIT造成服务器非正常退出
     ，无法执行析构函数，因此需要捕捉这些信号来执行析构*/
     static void ServerExceptionStop();
@@ -102,7 +101,10 @@ private:
     ThreadPool* threadPool = nullptr;
     //最大处理请求缓存
     int max_handle;
-
+    //日志管理器单例对象
+    static LoggerManager* logger_manager;
+    //日志器
+    static Logger::ptr logger;
 };
 
 

@@ -21,6 +21,13 @@ Connections::~Connections()
 
 
 
+void Connections::SetIP(char * _ip)
+{
+    if(_ip != nullptr){
+        std::strcpy(ip,_ip);
+    }
+}
+
 inline void Connections::FlushOut()
 {
     //!bug:Segmentation fault

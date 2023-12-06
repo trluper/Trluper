@@ -29,6 +29,9 @@ public:
     virtual ~Connections();
     //获得当前连接的文件描述符
     int GetFd(){return dataFd;}
+    
+    void SetIP(char* _ip);
+    const char* GetIP()const{return ip;}
     //由Server调用，进行写回，内部调用writeFd
     void FlushOut();
     //当writebBuffer空时，调用HashOutPut说明已经有数据要发送，此时要告诉Server的可写缓存区变化：有不可写变为可写，来触发epoll_wait
@@ -50,6 +53,7 @@ protected:
     virtual AbstractHandle* GetNextHanlder(AbstractMsg& msg)override;
 protected:
     int dataFd;                             //绑定dataFD
+    char ip[16];                            //ip地址
     bool NeedClose = false;                 //指示当前dataFd的开关状态,通知Server应该关闭这个连接
     std::list<std::shared_ptr<std::string>> writerBuffer;    //当需要主动发送信息给客户端时，这里作为写缓存存储数据
     Message* _msg_;                           //维护一个堆式的读缓存,客户端断开连接后释放

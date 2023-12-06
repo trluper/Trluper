@@ -473,6 +473,10 @@ std::string StdoutLogAppender::toYAMLString()
 }
 
 //! FileLogAppender实现
+FileLogAppender::FileLogAppender(const std::string &&filename):m_filename(filename)
+{
+    reopen();
+}
 FileLogAppender::FileLogAppender(const std::string &filename):m_filename(filename)
 {
     reopen();

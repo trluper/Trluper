@@ -15,38 +15,6 @@ make
 ```
 
 
-- 执行可执行文件,在`TEST`目录启动测试服务器`./Server`;在client/build启动client`./client`
-    - Server: 
-```
-trluper@Trluper:/home/project/Trluper/TEST$ ./Server 
-Log pattern string initial successfully.
-2023-12-04 10:25:08 [root][DEBUG] 27176(Trluper) /home/project/Trluper/test/main.cc (in main: 60): Hello Trluper log
-2023-12-04 10:25:08 [root][ERROR] 27176(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
-2023-12-04 10:25:08 [root][DEBUG] 27176(Trluper) /home/project/Trluper/test/main.cc (in main: 62): This is Trluper log, Line:61
-The configuration file was read successfully.
-Configure the following server attributes:
-Server Host:  172.21.163.218
-Server port: 8080
-Number of child thread is: 8
-Request cache maximum is: 8000
-新的客户端连接,ip：172.21.163.218
-<------------------------------------------------------------->
-Type is: 1
-recvfrom client: 你好
-send to client:8, packetSize: 14
-Type is: 2
-recvfrom client: 我在. lenSize: 6
-send to client:8, packetSize: 14
-```
-
-
-```
-trluper@Trluper:/home/project/Trluper/client/build$ ./client 
-1 你好
-你好
-2 我在
-我在
-```
 
 # 目录结构
 - **目录结构介绍：**
@@ -249,6 +217,41 @@ public:
 ```
 
 **上述的具体实现可看`TEST`目录下的源文件**
+
+### 效果
+
+- 执行可执行文件,在`TEST`目录启动测试服务器`./Server`;在client/build启动`./client`
+```
+trluper@Trluper:/home/project/Trluper/TEST$ ./Server 
+Log pattern string initial successfully.
+2023-12-04 10:25:08 [root][DEBUG] 27176(Trluper) /home/project/Trluper/test/main.cc (in main: 60): Hello Trluper log
+2023-12-04 10:25:08 [root][ERROR] 27176(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
+2023-12-04 10:25:08 [root][DEBUG] 27176(Trluper) /home/project/Trluper/test/main.cc (in main: 62): This is Trluper log, Line:61
+The configuration file was read successfully.
+Configure the following server attributes:
+Server Host:  172.21.163.218
+Server port: 8080
+Number of child thread is: 8
+Request cache maximum is: 8000
+新的客户端连接,ip：172.21.163.218
+<------------------------------------------------------------->
+Type is: 1
+recvfrom client: 你好
+send to client:8, packetSize: 14
+Type is: 2
+recvfrom client: 我在. lenSize: 6
+send to client:8, packetSize: 14
+```
+
+
+```
+trluper@Trluper:/home/project/Trluper/client/build$ ./client 
+1 你好
+你好
+2 我在
+我在
+```
+
 
 # 日志系统
 Trluper框架还配备了类似log4j风格的日志系统，即主要由日志器`logger`、`Appender`和`Formatter`构成：
