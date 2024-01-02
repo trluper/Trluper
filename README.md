@@ -424,3 +424,15 @@ int main(){
 
 - 我们使用互斥锁`Mutex`、信号量`Semphore`和任务队列`task_queue`以及线程程池`m_workers`实现线程池管理器`ThreadPool`
 
+# http协议支持
+## http.h头文件
+封装了http的请求结构体`HttpRequest`和响应结构体`HttpResponse`以及http的枚举方法`METHOD`、状态`STATUS`,并提供一些需要使用的函数。请求结构体`HttpRequest`和响应结构体`HttpResponse`两者**均提供了流式函数来得到相应的请求报文和响应报文**：
+- `httpStringRequest()`：返回组织好的请求报文
+- `httpStringResponse`：返回组织好的响应报文
+
+## httpRequestParser.h头文件
+封装了对http请求报文的解析类`HttpRequestParser`，主要支持两者解析方式，一是正则表达式解析，二是有限状态机的解析，两者解析方式的调用接口是：
+
+- `RegexParserHttpRequest`：正则表达式解析函数（解析性能本机测试为3704ms/10000条）
+- `FSMParserHttpRequest`：有限状态机解析函数（解析性能本机测试为46ms/10000条），有限状态机的状态转移示意图如下：
+<img src="images/FSM.png" width =1000>

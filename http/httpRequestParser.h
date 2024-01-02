@@ -70,13 +70,13 @@ public:
 public:
     
     /// @brief 正则表达解析http请求
-    /// @param request 请求
+    /// @param request http请求报文
     /// @param httpRequest 存储解析后的结果
     /// @return 解析是否成功
     bool RegexParserHttpRequest(const std::string& request, HttpRequest& httpRequest);  //3704505us/10000条
     
     /// @brief 有限状态机解析http请求
-    /// @param request http请求
+    /// @param request http请求报文
     /// @param HttpRequest 存储解析后的结果
     /// @return 解析是否成功
     bool FSMParserHttpRequest(const std::string& request, HttpRequest& _httpRequest);   //46651us/10000条
@@ -89,14 +89,6 @@ private:
     HttpRequestParser& operator=(const HttpRequestParser& obj) = default;
     HttpRequestParser& operator=(HttpRequestParser&& obj) = default;
     bool cookieParser(const std::string& request, HttpRequest& _httpRequest);
-private:
-    StringBuffer m_method;
-    StringBuffer m_path;
-    StringBuffer m_query_key;
-    StringBuffer m_query_value;
-    StringBuffer m_version;
-    StringBuffer m_header_key;
-    StringBuffer m_header_value;
 };
 //懒汉模式实现
 static std::shared_ptr<HttpRequestParser> parserSingle;

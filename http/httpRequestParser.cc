@@ -82,6 +82,14 @@ bool HttpRequestParser::FSMParserHttpRequest(const std::string &request, HttpReq
 
 bool HttpRequestParser::FSMParserHttpRequest(const char *request, HttpRequest &_httpRequest, size_t len)
 {
+    StringBuffer m_method;
+    StringBuffer m_path;
+    StringBuffer m_query_key;
+    StringBuffer m_query_value;
+    StringBuffer m_version;
+    StringBuffer m_header_key;
+    StringBuffer m_header_value;
+    
     logger = LOG_GET_MANAGER->getMainLogger();
     char* _request_begin = const_cast<char*>(request);
     HttpRequestStatus FSMStatus = HttpRequestStatus::START;

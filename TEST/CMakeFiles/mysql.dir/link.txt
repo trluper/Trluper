@@ -1,1 +1,0 @@
-g++  -rdynamic -O3 -fPIC -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function -Wno-builtin-macro-redefined -Wno-deprecated-declarations -rdynamic CMakeFiles/mysql.dir/test/test_mysqlpool.cc.o -o mysql  -Wl,-rpath,/home/project/Trluper/TEST libTrluper.so -ljsoncpp -lpthread /usr/lib/x86_64-linux-gnu/libyaml-cpp.so.0.7.0 -lmysqlclient 
