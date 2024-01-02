@@ -58,4 +58,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/log.dir/DependInfo.cmake"
   "CMakeFiles/mysql.dir/DependInfo.cmake"
   "CMakeFiles/http_package.dir/DependInfo.cmake"
+  "CMakeFiles/http_parser.dir/DependInfo.cmake"
   )

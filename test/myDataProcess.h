@@ -73,10 +73,10 @@ Trluper::Request *MyDataProcess::MsgToRequest(Trluper::Message& msg)
         id |= str[2]<<16;
         id |= str[3]<<24;
         size_t bytelength = 0;
-        bytelength |= str[4]<<0;
-        bytelength |= str[5]<<8;
-        bytelength |= str[6]<<16;
-        bytelength |= str[7]<<24;
+        bytelength |= static_cast<unsigned char>(str[4])<<0;
+        bytelength |= static_cast<unsigned char>(str[5])<<8;
+        bytelength |= static_cast<unsigned char>(str[6])<<16;
+        bytelength |= static_cast<unsigned char>(str[7])<<24;
         //请求不完整
         if(str.size()-8<bytelength){
              break;
@@ -97,8 +97,9 @@ Trluper::Message *MyDataProcess::RequestToMsg(Trluper::Request &request)
     Trluper::Message* _CMsg =new Trluper::Message(Trluper::IO_Direction::OUT);
     DYNAMIC_GETREF(MyRequest,_outRequest,request);
     std::string str=_outRequest->ret;
-    int id = _outRequest->requestType;
-    int bytelength = str.size();
+    //int id = _outRequest->requestType;
+    //int bytelength = str.size();
+    /*
     _CMsg->message.push_back((id>>0) & 0xff);
     _CMsg->message.push_back((id>>8) & 0xff);
     _CMsg->message.push_back((id>>16) & 0xff);
@@ -107,6 +108,7 @@ Trluper::Message *MyDataProcess::RequestToMsg(Trluper::Request &request)
     _CMsg->message.push_back((bytelength>>8) & 0xff);
     _CMsg->message.push_back((bytelength>>16) & 0xff);
     _CMsg->message.push_back((bytelength>>24) & 0xff);
+    */
     _CMsg->message.append(str);
     delete _outRequest;
     _outRequest = nullptr;

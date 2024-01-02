@@ -28,7 +28,7 @@ void MySQLPool::init()
             exit(1);
         }
         //连接
-        //出错请执行允许mysql执行 SELECT user, host FROM mysql.user WHERE user = 'm_user';
+        //出错请执行 SELECT user, host FROM mysql.user WHERE user = 'm_user';查看该数据库用户是否允许远程连接
         conn = mysql_real_connect(conn, m_ip.c_str(), m_user.c_str(), m_password.c_str(), m_DatabaseName.c_str(), m_port, NULL,0);
         if(nullptr == conn){
             LOG_SS_ERROR(logger)<<"MySQL connection failed."<<std::endl;

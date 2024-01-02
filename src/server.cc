@@ -5,6 +5,8 @@ namespace Trluper{
 Server* Server::singleServer = nullptr;
 LoggerManager* Server::logger_manager = nullptr;
 Logger::ptr Server::logger = nullptr;
+std::size_t Server::read_buffer_size = 1024;
+std::size_t Server::write_buffer_size = 2024;
 
 /// @brief 调用构造函数Server()和Init(),创建服务器socket，并执行绑定、监听功能，调用init()进行epoll上树操作
 /// @param ip ：ip地址
@@ -12,11 +14,11 @@ Logger::ptr Server::logger = nullptr;
 Server *Server::ServerInit(std::string& path , AbstractFactory* _singleFactory,bool multiThread)
 {
     if(nullptr==singleServer){
+        singleServer->logger_manager = LOG_GET_MANAGER;
+        singleServer->logger = logger_manager->getLogger("root");
         //完美转发
         singleServer = new Server(path,_singleFactory,multiThread);//9/12
         //日志器
-        singleServer->logger_manager = LOG_GET_MANAGER;
-        singleServer->logger = logger_manager->getLogger("root");
         Trluper::LogAppender::ptr appender_error(new FileLogAppender("../Log/root_error.txt"));
         appender_error->setLogLevel(LogLevel::ERROR);
         Trluper::LogAppender::ptr appender_info(new FileLogAppender("../Log/root_info.txt"));
@@ -119,6 +121,8 @@ void Server::ServerUseHandleOfDataProcess(DataProcess &process, Request* request
 Server::Server(std::string& path, AbstractFactory* _singleFactory,bool multiThread):singleFactory(_singleFactory)
 {
     const Json::Value& root = getConfig(path);
+    Server::read_buffer_size = root["read_buffer_size"].asInt();
+    Server::write_buffer_size = root["write_buffer_size"].asInt();
     std::string ip = root["ip"].asString();
     int port = root["port"].asInt();
     const char* _ip=ip.c_str();

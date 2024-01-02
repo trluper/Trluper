@@ -16,6 +16,8 @@ class UserMsg;
 class DataProcess:public AbstractHandle
 {
 public:
+    typedef std::shared_ptr<DataProcess> ptr;
+public:
     DataProcess();
     virtual ~DataProcess();
     //!开发需要重写该函数获得绑定的conn对象，返回一个Connections对象指针，

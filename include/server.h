@@ -105,6 +105,9 @@ private:
     static LoggerManager* logger_manager;
     //日志器
     static Logger::ptr logger;
+public:
+    static std::size_t read_buffer_size;
+    static std::size_t write_buffer_size;
 };
 
 

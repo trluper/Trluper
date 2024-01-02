@@ -9,6 +9,8 @@ class UserMsg;
 
 class FApplycations:public AbstractHandle{
 public:
+    typedef std::shared_ptr<FApplycations> ptr;
+public:
     FApplycations();
     virtual ~FApplycations();
     //该业务对象处理请求的函数，內部实现业务功能，若还需要进一步处理，则需要返回相关的请求信息（堆对象）

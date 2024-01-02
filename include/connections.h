@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <string.h>
+#include <algorithm>
 #include <iostream>
 #include "server.h"
 #include "dataProcess.h"
@@ -24,6 +25,8 @@ class UserMsg;
 * @memberof writeBuffer：当服务器要发送数据时，会将数据存储在这里，这里充当服务器的写缓存
 */
 class Connections : public AbstractHandle{
+public:
+    typedef std::shared_ptr<Connections> ptr;
 public:
     Connections(int _dataFd);
     virtual ~Connections();
