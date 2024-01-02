@@ -197,6 +197,19 @@ http_package/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/http_package.dir/build.make CMakeFiles/http_package.dir/build
 .PHONY : http_package/fast
 
+#=============================================================================
+# Target rules for targets named http_parser
+
+# Build rule for target.
+http_parser: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 http_parser
+.PHONY : http_parser
+
+# fast build rule for target.
+http_parser/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/http_parser.dir/build.make CMakeFiles/http_parser.dir/build
+.PHONY : http_parser/fast
+
 http/http.o: http/http.cc.o
 .PHONY : http/http.o
 
@@ -220,6 +233,30 @@ http/http.s: http/http.cc.s
 http/http.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Trluper.dir/build.make CMakeFiles/Trluper.dir/http/http.cc.s
 .PHONY : http/http.cc.s
+
+http/httpRequestParser.o: http/httpRequestParser.cc.o
+.PHONY : http/httpRequestParser.o
+
+# target to build an object file
+http/httpRequestParser.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Trluper.dir/build.make CMakeFiles/Trluper.dir/http/httpRequestParser.cc.o
+.PHONY : http/httpRequestParser.cc.o
+
+http/httpRequestParser.i: http/httpRequestParser.cc.i
+.PHONY : http/httpRequestParser.i
+
+# target to preprocess a source file
+http/httpRequestParser.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Trluper.dir/build.make CMakeFiles/Trluper.dir/http/httpRequestParser.cc.i
+.PHONY : http/httpRequestParser.cc.i
+
+http/httpRequestParser.s: http/httpRequestParser.cc.s
+.PHONY : http/httpRequestParser.s
+
+# target to generate assembly for a file
+http/httpRequestParser.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Trluper.dir/build.make CMakeFiles/Trluper.dir/http/httpRequestParser.cc.s
+.PHONY : http/httpRequestParser.cc.s
 
 src/abstractHandle.o: src/abstractHandle.cc.o
 .PHONY : src/abstractHandle.o
@@ -557,6 +594,30 @@ test/test_httpPackage.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/http_package.dir/build.make CMakeFiles/http_package.dir/test/test_httpPackage.cc.s
 .PHONY : test/test_httpPackage.cc.s
 
+test/test_httpParser.o: test/test_httpParser.cc.o
+.PHONY : test/test_httpParser.o
+
+# target to build an object file
+test/test_httpParser.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/http_parser.dir/build.make CMakeFiles/http_parser.dir/test/test_httpParser.cc.o
+.PHONY : test/test_httpParser.cc.o
+
+test/test_httpParser.i: test/test_httpParser.cc.i
+.PHONY : test/test_httpParser.i
+
+# target to preprocess a source file
+test/test_httpParser.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/http_parser.dir/build.make CMakeFiles/http_parser.dir/test/test_httpParser.cc.i
+.PHONY : test/test_httpParser.cc.i
+
+test/test_httpParser.s: test/test_httpParser.cc.s
+.PHONY : test/test_httpParser.s
+
+# target to generate assembly for a file
+test/test_httpParser.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/http_parser.dir/build.make CMakeFiles/http_parser.dir/test/test_httpParser.cc.s
+.PHONY : test/test_httpParser.cc.s
+
 test/test_log.o: test/test_log.cc.o
 .PHONY : test/test_log.o
 
@@ -640,12 +701,16 @@ help:
 	@echo "... Server"
 	@echo "... Trluper"
 	@echo "... http_package"
+	@echo "... http_parser"
 	@echo "... log"
 	@echo "... mysql"
 	@echo "... timer"
 	@echo "... http/http.o"
 	@echo "... http/http.i"
 	@echo "... http/http.s"
+	@echo "... http/httpRequestParser.o"
+	@echo "... http/httpRequestParser.i"
+	@echo "... http/httpRequestParser.s"
 	@echo "... src/abstractHandle.o"
 	@echo "... src/abstractHandle.i"
 	@echo "... src/abstractHandle.s"
@@ -688,6 +753,9 @@ help:
 	@echo "... test/test_httpPackage.o"
 	@echo "... test/test_httpPackage.i"
 	@echo "... test/test_httpPackage.s"
+	@echo "... test/test_httpParser.o"
+	@echo "... test/test_httpParser.i"
+	@echo "... test/test_httpParser.s"
 	@echo "... test/test_log.o"
 	@echo "... test/test_log.i"
 	@echo "... test/test_log.s"

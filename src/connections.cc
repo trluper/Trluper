@@ -41,11 +41,20 @@ inline void Connections::FlushOut()
 inline bool Connections::writeFd(std::string &_output)
 {
     bool ret = false;
-    char *_outbuf = (char*)calloc(1UL,_output.size());
-    _output.copy(_outbuf,_output.size());
-    if(dataFd>=0 && (_output.size() == (size_t)(send(dataFd,_outbuf,_output.size(),0)))){
-        std::cout<<"send to client:"<<dataFd<<", packetSize: "<<_output.size()<<std::endl;
-        ret = true;
+    std::size_t len = _output.size(), loc = 0;
+    char *_outbuf = nullptr;
+    if(len <= Server::write_buffer_size){
+        _outbuf = (char*)calloc(1UL,_output.size());
+    }
+    else{
+        _outbuf = (char*)calloc(1UL,Server::write_buffer_size);
+    }
+    while(loc < len){
+        loc+=_output.copy(_outbuf,std::min(_output.size()-loc,Server::write_buffer_size),loc);
+        if(dataFd>=0 && (_output.size() == (size_t)(send(dataFd,_outbuf,_output.size(),0)))){
+            std::cout<<"send to client:"<<dataFd<<", packetSize: "<<_output.size()<<std::endl;
+            ret = true;
+        }
     }
     free(_outbuf);
     return ret;
@@ -54,7 +63,7 @@ inline bool Connections::writeFd(std::string &_output)
 inline bool Connections::ReadFd(std::string& _input)
 {
     bool ret = false;
-    char buf[1024] = {0};
+    char buf[Server::read_buffer_size] = {0};
     while(true){
         ssize_t rcvLen = recv(dataFd,buf,sizeof(buf),MSG_DONTWAIT);
         if(0 < rcvLen){

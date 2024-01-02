@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <string>
+#include <limits>
 #include <iostream>
 #define messageLen 1024
 
@@ -30,10 +31,11 @@ public:
             perror("connect:");
         }
         while(true){
-            std::string sin("");
+            std::string sin;
             int id = 0;
             std::cin>>id;
-            std::cin>>sin;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::getline(std::cin,sin);
             sin = serilize(id,sin);
             int len=sin.size();
             //!bug：buf不能用new、malloc分配，这样可能使得介收到的数据为空

@@ -24,6 +24,8 @@ namespace Trluper{
         int serverPort = root["port"].asInt();
         int threadNums = root["thread_nums"].asInt();
         int maxHandle = root["max_handle"].asInt();
+        int read_buffer_size = root["read_buffer_size"].asInt();
+        int write_buffer_size = root["write_buffer_size"].asInt();
         std::string MySQLHost = root["mysql_host"].asString();
         std::string MySQLUser = root["mysql_user"].asString();
         std::string MySQLPassword = root["mysql_password"].asString();
@@ -37,6 +39,8 @@ namespace Trluper{
         std::cout<<"Server port: "<<serverPort<<std::endl;
         std::cout<<"Number of child thread is: "<<threadNums<<std::endl;
         std::cout<<"Request cache maximum is: "<<maxHandle<<std::endl;
+        std::cout<<"Read Buffer size is: "<<read_buffer_size<<"Byte"<<std::endl;
+        std::cout<<"Write Buffer size is: "<<write_buffer_size<<"Byte"<<std::endl;
         std::cout<<"--------------------MySQL Configuration--------------------"<<std::endl;
         std::cout<<"MySQL Host: "<<MySQLHost<<std::endl;
         std::cout<<"MySQL Port: "<<MySQLPort<<std::endl;
@@ -64,6 +68,8 @@ namespace Trluper{
         int serverPort = root["port"].asInt();
         int threadNums = root["thread_nums"].asInt();
         int maxHandle = root["max_handle"].asInt();
+        int read_buffer_size = root["read_buffer_size"].asInt();
+        int write_buffer_size = root["write_buffer_size"].asInt();
         std::string MySQLHost = root["mysql_host"].asString();
         std::string MySQLUser = root["mysql_user"].asString();
         std::string MySQLPassword = root["mysql_password"].asString();
@@ -77,6 +83,8 @@ namespace Trluper{
         std::cout<<"Server port: "<<serverPort<<std::endl;
         std::cout<<"Number of child thread is: "<<threadNums<<std::endl;
         std::cout<<"Request cache maximum is: "<<maxHandle<<std::endl;
+        std::cout<<"Read Buffer size is: "<<read_buffer_size<<"Btye"<<std::endl;
+        std::cout<<"Write Buffer size is: "<<write_buffer_size<<"Byte"<<std::endl;
         std::cout<<"--------------------MySQL Configuration--------------------"<<std::endl;
         std::cout<<"MySQL Host: "<<MySQLHost<<std::endl;
         std::cout<<"MySQL Port: "<<MySQLPort<<std::endl;

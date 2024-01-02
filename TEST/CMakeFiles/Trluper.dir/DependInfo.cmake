@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/project/Trluper/http/http.cc" "CMakeFiles/Trluper.dir/http/http.cc.o" "gcc" "CMakeFiles/Trluper.dir/http/http.cc.o.d"
+  "/home/project/Trluper/http/httpRequestParser.cc" "CMakeFiles/Trluper.dir/http/httpRequestParser.cc.o" "gcc" "CMakeFiles/Trluper.dir/http/httpRequestParser.cc.o.d"
   "/home/project/Trluper/src/abstractHandle.cc" "CMakeFiles/Trluper.dir/src/abstractHandle.cc.o" "gcc" "CMakeFiles/Trluper.dir/src/abstractHandle.cc.o.d"
   "/home/project/Trluper/src/connections.cc" "CMakeFiles/Trluper.dir/src/connections.cc.o" "gcc" "CMakeFiles/Trluper.dir/src/connections.cc.o.d"
   "/home/project/Trluper/src/dataProcess.cc" "CMakeFiles/Trluper.dir/src/dataProcess.cc.o" "gcc" "CMakeFiles/Trluper.dir/src/dataProcess.cc.o.d"

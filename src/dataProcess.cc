@@ -24,7 +24,7 @@ inline AbstractMsg *DataProcess::currentHandle(AbstractMsg &msg)
             UserMsg* _msg_ = new UserMsg(IO_Direction::IN);
             _msg_->SetRequest(request);
             _UMmsg = _msg_;
-        }
+        } 
     }
     else if(IO_Direction::OUT==state->IO_DIC){
         DYNAMIC_GETREF(UserMsg,_userMsg,msg);

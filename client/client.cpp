@@ -9,7 +9,7 @@
 #include "client.h"
 
 int main(){
-    std::string serverip("172.21.163.218");
+    std::string serverip("172.18.126.67");
     int port=8080;
     client _client(serverip,port);
     _client.run();

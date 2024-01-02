@@ -41,10 +41,12 @@ set(SOURCE_DIR
   src/util.cc
   src/log.cc
   src/mysqlpool.cc
+  http/http.cc
+  http/httpRequestParser.cc
 )
 
 add_library(Trluper SHARED ${SOURCE_DIR})
-include_directories(include)
+include_directories(include http)
 
 set(LIBS
     Trluper
@@ -59,18 +61,22 @@ add_executable(Server test/Server.cc)
 target_include_directories(Server PUBLIC test)
 target_link_libraries(Server ${LIBS}) 
 
-add_executable(timer test/timer_test.cc)
+add_executable(timer test/test_timer.cc)
 target_include_directories(timer PUBLIC test)
 target_link_libraries(timer ${LIBS})
 
 add_executable(log test/test_log.cc)
 target_include_directories(log PUBLIC test)
 target_link_libraries(log ${LIBS})
-
-add_executable(coroutine test/test_coroutine.cc)
-target_include_directories(coroutine PUBLIC test)
-target_link_libraries(coroutine ${LIBS})
-
+  
 add_executable(mysql test/test_mysqlpool.cc)
 target_include_directories(mysql PUBLIC test)
 target_link_libraries(mysql ${LIBS})
+
+add_executable(http_package test/test_httpPackage.cc)
+target_include_directories(http_package PUBLIC test)
+target_link_libraries(http_package ${LIBS})
+
+add_executable(http_parser test/test_httpParser.cc)
+target_include_directories(http_parser PUBLIC test)
+target_link_libraries(http_parser ${LIBS})

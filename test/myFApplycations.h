@@ -66,7 +66,7 @@ inline Trluper::Request *MyFApplycations::echoAndLenFunc(std::string str)
 inline Trluper::Request *MyFApplycations::ProcRequest(Trluper::Request& _request)
 {
     DYNAMIC_GETREF(ListRequest,_lRequestObj,_request);
-   while(false == _lRequestObj->lRequest.empty()){
+    while(false == _lRequestObj->lRequest.empty()){
         auto request = _lRequestObj->lRequest.front();
         _lRequestObj->lRequest.pop_front();
         std::cout<<"Type is: "<<request->requestType<<std::endl;

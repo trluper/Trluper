@@ -73,7 +73,8 @@
         "any": "cpp",
         "hash_map": "cpp",
         "hash_set": "cpp",
-        "span": "cpp"
+        "span": "cpp",
+        "regex": "cpp"
     },
     "editor.suggest.snippetsPreventQuickSuggestions": false,
     "better-comments.multilineComments": true,
