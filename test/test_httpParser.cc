@@ -25,6 +25,7 @@ int main(int argc, char* argv[]){
             std::cout<<req.httpStringRequest()<<std::endl;
         }*/
         p->FSMParserHttpRequest(request,req);
+        //std::string str = req.httpStringRequest();
     }
     auto end_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
