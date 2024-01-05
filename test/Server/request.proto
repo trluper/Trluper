@@ -1,0 +1,12 @@
+syntax = "proto3";
+package req;
+option go_package=".";
+
+//定义两个消息
+message echo{
+   string msg = 1;
+}
+message echoAndLen{
+    string msg = 1;
+    sint32 len = 2;
+}

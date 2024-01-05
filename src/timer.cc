@@ -2,25 +2,36 @@
 namespace Trluper{
 
 
-bool Timer::resetTimer(bool reset, uint64_t ms, bool from_now)
+bool Timer::resetTimer(Node<Timer>* timer, bool reset, uint64_t ms, bool from_now)
 {
     if(reset) this->m_ms=ms;
-    refresh();
+    refresh(timer);
     return true;
 }
 
-void Timer::refresh()
+void Timer::refresh(Node<Timer>* timer)
 {
+   
     uint32_t slots = this->m_ms/m_manager->m_precisonMs;
-    if(slots<m_manager->m_workScale){
+    /*
+    * 两种情况：
+    * 1）slots<m_workScale：该定时器放在工作轮上即可，即(m_workPtr+slots)%m_workScale
+    * 2)slots>=m_workScale：该定时器不在工作轮，二是在二级中，我们需要定位其所在的二级轮的槽位置
+    *       (1)二级轮位置index = (m_secondPtr+⌈(slots+m_workPtr+1-m_workScale)/m_workScale⌉)%m_secondScale,⌈⌉表示向上取整
+    *       (2)所在的槽slot = (slots+m_workPtr)%m_workScale
+    * 举例：假如m_workScale = 5,m_secondScale=6,经过一段时间后，m_workPtr = 2,m_secondPtr = 3,
+    * Ⅰ、假如此时插入一个slots=26的定时器，位置在哪? 使用上面公式二级轮的index = (3+⌈(26+2+1-5)/5⌉)%6 = (3+5)%6=2; slot=(26+2)%5=3
+    * Ⅱ、假如此时插入一个slots=7的定时器，位置又在哪？使用上面公式二级轮的index = (3+⌈(7+2+1-5)/5⌉)%6 = (3+1)%6=4; slot=(7+2)%5=4
+    * Ⅲ、假如此时插入一个slots=4的定时器，位置又在哪？在工作轮的(2+4)%5=1
+    */
+    if(slots < m_manager->m_workScale){
         slots = (slots+m_manager->m_workPtr)%m_manager->m_workScale;
-        m_manager->m_workWheel[slots].push_back(shared_from_this());
+        m_manager->m_workWheel[slots].addNode(timer);
     }
     else{
-        int secondSlot = (slots/m_manager->m_workScale+m_manager->m_secondPtr-1)
-                        %m_manager->m_secondScale;
-        slots = slots%m_manager->m_workScale;
-        m_manager->m_secondWheel[secondSlot][slots].push_back(shared_from_this());
+        int index = (m_manager->m_secondPtr+(slots+m_manager->m_workPtr)/m_manager->m_workScale)%m_manager->m_secondScale;  //向上取整⌈a/b⌉==(a+b-1)/b
+        slots = (slots+m_manager->m_workPtr)%m_manager->m_workScale;
+        m_manager->m_secondWheel[index][slots].addNode(timer);
     }
 }
 
@@ -42,26 +53,15 @@ TimerManager::TimerManager(uint32_t workScale,uint32_t secondScale,uint64_t prec
 
 TimerManager::~TimerManager()
 {
+    
 }
-Timer::ptr TimerManager::addTimer(uint64_t ms, std::function<void(void *)> cb,void* arg, bool recurring)
+Node<Timer>* TimerManager::addTimer(uint64_t ms, std::function<void(void *)> cb,void* arg, bool recurring)
 {
-    try
-    {
-        if(ms<m_precisonMs){
-            throw std::exception();
-        }
-        else{
-            Timer::ptr timer(new Timer(ms,cb,arg,recurring,this));
-            WriteLockguard<RWMutex> writelock(this->m_mutex);
-            addTimer(timer,writelock);
-            return timer;
-        }
-    }
-    catch(const std::exception& e)
-    {
-        std::cout<<"创建定时器失败，定时间隔小于最小定时精度："<<m_precisonMs<<"ms"<<std::endl;
-        return nullptr;
-    }
+    Node<Timer>* timer = new Node<Timer>(Timer(ms,cb,arg,recurring,this));
+    //Timer::ptr timer(new Timer(ms,cb,arg,recurring,this));
+    WriteLockguard<RWMutex> writelock(this->m_mutex);
+    addTimer(timer);
+    return timer;
 }
 
 uint64_t TimerManager::getNextTimer()
@@ -83,32 +83,30 @@ uint64_t TimerManager::getNextTimer()
     return ms;    
 }
 
-void TimerManager::listExpiredCb(std::list<Timer::ptr> &tlist)
+void TimerManager::listExpiredCb(Trluper::LinkedList<Timer>& tlist)
 {
     WriteLockguard<RWMutex> writelock(m_mutex);
     uint64_t Now = Trluper::GetCurrentMs();
     uint64_t ms = Now-m_previouseTime;
-    if(ms>=m_precisonMs){
+    if(ms >= m_precisonMs){
         m_previouseTime = Now;
-        uint32_t slots = ms/m_precisonMs;
-        for(uint32_t i = 1;i <= slots;++ i){
-            if(!m_workWheel[(m_workPtr+i)%m_workScale].empty()){
-                std::list<Timer::ptr> temp(std::move(m_workWheel[(m_workPtr+i)%m_workScale]));
-                //*该方法虽然为O(1)时间复杂度，但在大量数据情况下仍有会出现耗时，后续可以自己实现一个list来优化
-                tlist.splice(tlist.end(),temp,temp.begin(),temp.end());
-            }
+        uint32_t slots = ms/m_precisonMs; 
+        bool nextCycle = true;
+        for(uint32_t i = 0; i < slots; ++i) {
+            uint32_t slot = m_workPtr+i;
+            Node<Timer>* node = m_workWheel[slot % m_workScale].getHead();
+            m_workWheel[slot % m_workScale].setNullptr();
+            tlist.addNode(node);
+            //二级轮的对应位置移到工作轮上
+            m_workWheel[slot % m_workScale].addNode(m_secondWheel[(m_secondPtr+1)%m_secondScale][slot % m_workScale].getHead());
+            m_secondWheel[(m_secondPtr+1)%m_secondScale][slot % m_workScale].setNullptr();
+        if(nextCycle && slot >= m_workScale) {
+                ++m_secondPtr;
+                nextCycle = false;
         }
-        uint32_t addSlot = m_workPtr+slots;
-        m_workPtr = (addSlot)%m_workScale;
-        if(addSlot>=m_workScale){
-            for(uint32_t i = 0;i<m_workScale;++i){
-                std::list<Timer::ptr> temp(std::move(m_secondWheel[m_secondPtr][i]));
-                m_workWheel[i].splice(m_workWheel[i].end(),temp,temp.begin(),temp.end());
-            }
-            m_secondPtr = (m_secondPtr+1)%m_secondScale;
         }
+        m_workPtr = (m_workPtr+slots)%m_workScale;
     }
-    
 }
 
 bool TimerManager::hasTimer()
@@ -129,9 +127,9 @@ bool TimerManager::hasTimer()
 
 
 
-void TimerManager::addTimer(Timer::ptr val, WriteLockguard<RWMutex> &wlock)
+void TimerManager::addTimer(Node<Timer>* timer)
 {
-    val->refresh();
+    timer->data.refresh(timer);
 }
 
 

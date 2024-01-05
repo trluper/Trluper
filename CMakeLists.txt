@@ -57,8 +57,8 @@ set(LIBS
     )
 
 
-add_executable(Server test/Server.cc)
-target_include_directories(Server PUBLIC test)
+add_executable(Server test/Server/Server.cc)
+target_include_directories(Server PUBLIC test/Server)
 target_link_libraries(Server ${LIBS}) 
 
 add_executable(timer test/test_timer.cc)

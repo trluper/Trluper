@@ -42,21 +42,15 @@ inline bool Connections::writeFd(std::string &_output)
 {
     bool ret = false;
     std::size_t len = _output.size(), loc = 0;
-    char *_outbuf = nullptr;
-    if(len <= Server::write_buffer_size){
-        _outbuf = (char*)calloc(1UL,_output.size());
-    }
-    else{
-        _outbuf = (char*)calloc(1UL,Server::write_buffer_size);
-    }
+    const char* p = _output.c_str();
     while(loc < len){
-        loc+=_output.copy(_outbuf,std::min(_output.size()-loc,Server::write_buffer_size),loc);
-        if(dataFd>=0 && (_output.size() == (size_t)(send(dataFd,_outbuf,_output.size(),0)))){
-            std::cout<<"send to client:"<<dataFd<<", packetSize: "<<_output.size()<<std::endl;
+        p+=loc;
+        if(dataFd>=0){
+            loc = (size_t)(send(dataFd,p,len-loc,0));
+            std::cout<<"send to client:"<<dataFd<<", packetSize: "<< loc << std::endl;
             ret = true;
         }
     }
-    free(_outbuf);
     return ret;
 }
 
