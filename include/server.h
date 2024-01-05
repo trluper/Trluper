@@ -70,7 +70,7 @@ public:
     */
     /*当业务应用层处理完后，应该调用数据层的额Handle函数进行响应，该函数在业务层处理后调用，由开发者调用*/
     static void ServerUseHandleOfDataProcess(DataProcess& process,Request* request);
-
+    
 private:
     //构造、拷贝构造、赋值私有化
     Server(std::string& path, AbstractFactory* _singleFactory,bool multiThread);
@@ -83,6 +83,7 @@ private:
     void ctlAcceptFd();
     //当客户端关闭时会调用此函数
     void ctlCloseFd(struct epoll_event& ev);
+private:
     //epoll句柄
     int epollfd = -1;
     //listenfd的文件描述符
@@ -101,13 +102,13 @@ private:
     ThreadPool* threadPool = nullptr;
     //最大处理请求缓存
     int max_handle;
+public:
+    static std::size_t read_buffer_size;
+    static std::size_t write_buffer_size;
     //日志管理器单例对象
     static LoggerManager* logger_manager;
     //日志器
     static Logger::ptr logger;
-public:
-    static std::size_t read_buffer_size;
-    static std::size_t write_buffer_size;
 };
 
 

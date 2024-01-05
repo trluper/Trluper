@@ -16,7 +16,7 @@ Server *Server::ServerInit(std::string& path , AbstractFactory* _singleFactory,b
     if(nullptr==singleServer){
         singleServer->logger_manager = LOG_GET_MANAGER;
         singleServer->logger = logger_manager->getLogger("root");
-        //完美转发
+    
         singleServer = new Server(path,_singleFactory,multiThread);//9/12
         //日志器
         Trluper::LogAppender::ptr appender_error(new FileLogAppender("../Log/root_error.txt"));
@@ -55,10 +55,10 @@ void Server::ServerStop(int signal,siginfo_t* info,void* context)
 
 void Server::ServerRun()
 {
-    if(nullptr!=singleServer){
+    if(nullptr != singleServer){
         singleServer->run();
     }else{
-        LOG_SS_ERROR(logger)<<"ServerRun failed, the value of singleServer is nullptr."<<std::endl;
+        LOG_SS_ERROR(logger)<<"ServerRun failed, the value of singleServer is nullptr." << std::endl;
         exit(1);
     }
 }

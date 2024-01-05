@@ -7,7 +7,8 @@
 namespace Trluper{
 //!IO方向，IN指示方向为连接层-->数据层-->业务层；OUT为业务层-->数据层-->连接层
 enum IO_Direction{
-        IN,OUT
+        IN  = 1,
+        OUT = 2
 }; 
 class Request;   
 
@@ -25,6 +26,7 @@ public:
     IOState(IO_Direction dic);
     virtual ~IOState();
 };
+
 //!在连接层会构造的传输的消息封装类,不需要继承重写
 class Message:public IOState{
 public:

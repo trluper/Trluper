@@ -224,32 +224,56 @@ public:
 ```
 trluper@Trluper:/home/project/Trluper/TEST$ ./Server 
 Log pattern string initial successfully.
-2023-12-04 10:25:08 [root][DEBUG] 27176(Trluper) /home/project/Trluper/test/main.cc (in main: 60): Hello Trluper log
-2023-12-04 10:25:08 [root][ERROR] 27176(Trluper) /home/project/Trluper/test/main.cc (in main: 61): ERROR IN LINE 61
-2023-12-04 10:25:08 [root][DEBUG] 27176(Trluper) /home/project/Trluper/test/main.cc (in main: 62): This is Trluper log, Line:61
 The configuration file was read successfully.
 Configure the following server attributes:
-Server Host:  172.21.163.218
+--------------------Server Configuration--------------------
+Server Host: 172.20.25.130
 Server port: 8080
 Number of child thread is: 8
 Request cache maximum is: 8000
-新的客户端连接,ip：172.21.163.218
+Read Buffer size is: 8192Byte
+Write Buffer size is: 16384Byte
+--------------------MySQL Configuration--------------------
+MySQL Host: 172.20.25.130
+MySQL Port: 3306
+MySQL Username: trluper
+MySQL Password: 123456
+MySQL Database: test
+--------------------Log Configuration----------------------
+- name: root
+  level: DEBUG
+  formatter: "%d{%Y-%m-%d %H:%M:%S} [%c][%p] %t(%N) %f (in %F: %l): %m%n"
+  appenders:
+    - type: StdoutLogAppender
+      level: DEBUG
+--------------------Server's Log Configuration-------------
+- name: root
+  level: DEBUG
+  formatter: "%d{%Y-%m-%d %H:%M:%S} [%c][%p] %t(%N) %f (in %F: %l): %m%n"
+  appenders:
+    - type: StdoutLogAppender
+      level: DEBUG
+    - type: " FileLogAppender"
+      file: ../Log/root_info.txt
+      level: INFO
+    - type: " FileLogAppender"
+      file: ../Log/root_error.txt
+      level: ERROR
+--------------------Running Log info-----------------------
+2024-01-05 17:40:17 [root][INFO] 17212(Trluper-0) /home/project/Trluper/src/server.cc (in ctlAcceptFd: 261): 新的客户端连接,ip：172.20.25.130
+
 <------------------------------------------------------------->
 Type is: 1
 recvfrom client: 你好
-send to client:8, packetSize: 14
-Type is: 2
-recvfrom client: 我在. lenSize: 6
-send to client:8, packetSize: 14
+send to client:7, packetSize: 6
 ```
 
 
 ```
 trluper@Trluper:/home/project/Trluper/client/build$ ./client 
-1 你好
+1
 你好
-2 我在
-我在
+你好
 ```
 
 
@@ -364,6 +388,7 @@ int main(){
  # 定时器
  框架也自带搭配了定时器`Timer`；同时实了二级时间轮管理器`TimerManager`，可支持自定义设定工作轮的时间精度`m_precisonMs`和刻度数量`m_workScale`,同样也支持自定义设定二级轮的刻度数量`m_secondScale`。
 
+
 ## 主要属性和接口
 - 定时器`Timer`类：
 	- 构造函数`Timer(uint64_t ms,std::function<void(void*)>cb,void* arg,bool recurring,TimerManager* manager);`
@@ -388,26 +413,39 @@ void timerTest(void* arg){
 }
 
 void test(){
+    /*
     uint64_t ms = Trluper::GetCurrentMs();
     sleep(2);
     ms=Trluper::GetCurrentMs()-ms;
     std::cout<<ms<<std::endl;
+    */
 
-    Trluper::TimerManager manager(4,3,2000);
+    Trluper::TimerManager manager(200,60,300);
     std::function<void(void*)> cb(timerTest);
-    manager.addTimer(10000,cb,NULL,true);
+    manager.addTimer(9000,cb,NULL,true);
+     manager.addTimer(1000,cb,NULL,false);
+   // manager.addTimer(5000,cb,NULL,true);
+   // manager.addTimer(1000,cb,NULL,true);
+   // manager.addTimer(500,cb,NULL,true);
+    //manager.addTimer(1000,cb,NULL,true);
     //manager.addTimer(2000,cb,NULL,true);
     //manager.addTimer(120000,cb,NULL,true);
     while(true){
-        sleep(2);
-        std::list<Trluper::Timer::ptr> tlist;
+        //sleep(2);
+        Trluper::LinkedList<Trluper::Timer> tlist;
         manager.listExpiredCb(tlist);
-        for(auto p:tlist){
-            p->callBack();
-            if(p->isRecur()){
-                p->resetTimer(false,2000);
+        auto head = tlist.getHead();
+        while(head!=nullptr){
+            auto p = head;
+            head = head->next;
+            p->data.callBack();
+            if(p->data.isRecur()){
+                p->data.resetTimer(p,false,2000);
+            }else{
+                delete p;
             }
         }
+        tlist.setNullptr();
     }
 }
 
