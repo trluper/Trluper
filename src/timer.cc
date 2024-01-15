@@ -11,7 +11,7 @@ bool Timer::resetTimer(Node<Timer>* timer, bool reset, uint64_t ms, bool from_no
 
 void Timer::refresh(Node<Timer>* timer)
 {
-   
+    
     uint32_t slots = this->m_ms/m_manager->m_precisonMs;
     /*
     * 两种情况：
@@ -59,7 +59,7 @@ Node<Timer>* TimerManager::addTimer(uint64_t ms, std::function<void(void *)> cb,
 {
     Node<Timer>* timer = new Node<Timer>(Timer(ms,cb,arg,recurring,this));
     //Timer::ptr timer(new Timer(ms,cb,arg,recurring,this));
-    WriteLockguard<RWMutex> writelock(this->m_mutex);
+    
     addTimer(timer);
     return timer;
 }
@@ -83,7 +83,7 @@ uint64_t TimerManager::getNextTimer()
     return ms;    
 }
 
-void TimerManager::listExpiredCb(Trluper::LinkedList<Timer>& tlist)
+void TimerManager::listExpiredCb(Trluper::LinkedList& tlist)
 {
     WriteLockguard<RWMutex> writelock(m_mutex);
     uint64_t Now = Trluper::GetCurrentMs();
@@ -129,6 +129,7 @@ bool TimerManager::hasTimer()
 
 void TimerManager::addTimer(Node<Timer>* timer)
 {
+    WriteLockguard<RWMutex> writelock(this->m_mutex);
     timer->data.refresh(timer);
 }
 

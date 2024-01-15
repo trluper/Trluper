@@ -23,11 +23,11 @@ public:
 private:
     Trluper::Connections* conn = nullptr;
     Trluper::FApplycations* app = nullptr;
-    ListRequest* lreq = nullptr;
+    MyRequest* req = nullptr;
 };
 
 //5/12
-MyDataProcess::MyDataProcess():lreq(new ListRequest())
+MyDataProcess::MyDataProcess()
 {
 
 }
@@ -35,7 +35,7 @@ MyDataProcess::MyDataProcess():lreq(new ListRequest())
 MyDataProcess::~MyDataProcess()
 {
     if(nullptr != app) delete app;
-    if(nullptr != lreq) delete lreq;
+    
 }
 
 inline void MyDataProcess::SetConnectionsObj(Trluper::Connections *_conn)
@@ -61,7 +61,6 @@ inline Trluper::FApplycations *MyDataProcess::GetApplycationsObj(Trluper::Abstra
 
 Trluper::Request *MyDataProcess::MsgToRequest(Trluper::Message& msg)
 {
-    ListRequest* ret = nullptr;
     std::string& str = msg.message;
     while (1)
     {
@@ -82,13 +81,12 @@ Trluper::Request *MyDataProcess::MsgToRequest(Trluper::Message& msg)
              break;
         }
         MyRequest* _request =new MyRequest((REQUEST_TYPE)id,str.substr(8,bytelength));
-        lreq->lRequest.push_back(_request);
+        _request->next = req;
+        req = _request;
         str.erase(0,8+bytelength);
     }
-    if(lreq->lRequest.empty()==false){
-        ret = lreq;
-    }
-   
+    MyRequest* ret = req;
+    req = nullptr;
     return ret;
 }
 

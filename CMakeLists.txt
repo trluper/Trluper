@@ -29,7 +29,6 @@ endif()
 
 # 添加可执行文件的目标，包括测试代码源文件和可执行文件的名称
 set(SOURCE_DIR
-  src/message.cc
   src/server.cc
   src/abstractHandle.cc
   src/connections.cc
@@ -80,3 +79,8 @@ target_link_libraries(http_package ${LIBS})
 add_executable(http_parser test/test_httpParser.cc)
 target_include_directories(http_parser PUBLIC test)
 target_link_libraries(http_parser ${LIBS})
+
+add_executable(router test/test_router.cc)
+target_include_directories(router PUBLIC test)
+target_link_libraries(router ${LIBS})
+

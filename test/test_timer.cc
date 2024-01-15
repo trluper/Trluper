@@ -16,7 +16,7 @@ void test(){
     Trluper::TimerManager manager(200,60,300);
     std::function<void(void*)> cb(timerTest);
     manager.addTimer(9000,cb,NULL,true);
-     manager.addTimer(1000,cb,NULL,false);
+    manager.addTimer(1000,cb,NULL,false);
    // manager.addTimer(5000,cb,NULL,true);
    // manager.addTimer(1000,cb,NULL,true);
    // manager.addTimer(500,cb,NULL,true);
@@ -25,7 +25,7 @@ void test(){
     //manager.addTimer(120000,cb,NULL,true);
     while(true){
         //sleep(2);
-        Trluper::LinkedList<Trluper::Timer> tlist;
+        Trluper::LinkedList tlist;
         manager.listExpiredCb(tlist);
         auto head = tlist.getHead();
         while(head!=nullptr){
@@ -33,7 +33,7 @@ void test(){
             head = head->next;
             p->data.callBack();
             if(p->data.isRecur()){
-                p->data.resetTimer(p,false,2000);
+                manager.addTimer(p);
             }else{
                 delete p;
             }

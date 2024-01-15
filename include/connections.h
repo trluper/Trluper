@@ -51,9 +51,9 @@ protected:
     //从dataFd中读取数据
     bool ReadFd(std::string& _input);
     //当前连接层的处理逻辑在此实现，对于IN返回的是Message对象，对于OUT，将消息写入writerBuffer，返回nullptr
-    virtual AbstractMsg* currentHandle(AbstractMsg& msg)override;
+    virtual AbstractMsg* currentHandle(AbstractMsg& msg)override final;
     //位于连接层，因此只处理IN的下一个处理者，对于OUT没有下一个处理者
-    virtual AbstractHandle* GetNextHanlder(AbstractMsg& msg)override;
+    virtual AbstractHandle* GetNextHanlder(AbstractMsg& msg)override final;
 protected:
     int dataFd;                             //绑定dataFD
     char ip[16];                            //ip地址

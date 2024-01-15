@@ -29,8 +29,8 @@ public:
     //*将应用层递交下来的Request类型的数据转为Message类型，这里就要开发者自己依据自定义额数据格式来重写该函数
     virtual Message* RequestToMsg(Request& request) = 0;
 protected:
-    virtual AbstractMsg* currentHandle(AbstractMsg& msg)override;
-    virtual AbstractHandle* GetNextHanlder(AbstractMsg& msg)override;
+    virtual AbstractMsg* currentHandle(AbstractMsg& msg)override final;
+    virtual AbstractHandle* GetNextHanlder(AbstractMsg& msg)override final;
 };
 
 }

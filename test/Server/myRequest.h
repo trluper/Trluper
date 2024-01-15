@@ -17,7 +17,7 @@ public:
     
     MyRequest(REQUEST_TYPE _type,std::string str);
     virtual ~MyRequest();
-    
+    template<typename T=REQUEST_TYPE> T getRequestType(){return requestType;}
 
 public:
     //用户的protobuf消息指针
@@ -26,10 +26,6 @@ public:
     REQUEST_TYPE requestType;
 };
 
-class ListRequest: public Trluper::Request{
-public:
-    std::list<MyRequest*> lRequest;
-};
 
 MyRequest::MyRequest(REQUEST_TYPE _type, std::string str):ret(str),requestType(_type)
 {

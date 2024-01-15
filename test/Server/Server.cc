@@ -13,43 +13,7 @@
 #include "thread.h"
 
 
-
-#ifdef _TIMER_TEST
-void timerTest(void* arg){
-
-   std::cout<<"Timer Test,当前时间："<<clock()/CLOCKS_PER_SEC<<std::endl;
-}
-
-void test(){
- uint64_t ms = Trluper::GetCurrentMs();
-    sleep(2);
-    ms=Trluper::GetCurrentMs()-ms;
-    std::cout<<ms<<std::endl;
-
-    Trluper::TimerManager manager(4,3,20000);
-    std::function<void(void*)> cb(timerTest);
-    manager.addTimer(40000,cb,NULL,true);
-    manager.addTimer(2000,cb,NULL,true);
-    //manager.addTimer(120000,cb,NULL,true);
-    while(true){
-        sleep(2);
-        std::list<Trluper::Timer::ptr> tlist;
-        manager.listExpiredCb(tlist);
-        for(auto p:tlist){
-            p->callBack();
-            if(p->isRecur()){
-                p->resetTimer(false,2000);
-            }
-        }
-    }
-}
-#endif
-
 int main(){
-    
-#ifdef _TIMER_TEST 
-    test();
-#endif
     
     //C/S回显测试代码
     std::string configPath = "/home/project/Trluper/config/config.json";

@@ -99,7 +99,6 @@ inline Trluper::FApplycations *MyDataProcess::GetApplycationsObj(Trluper::Abstra
 
 Trluper::Request *MyDataProcess::MsgToRequest(Trluper::Message& msg)
 {
-    ListRequest* ret = nullptr;
     std::string& str = msg.message;
     while (1)
     {
@@ -110,23 +109,22 @@ Trluper::Request *MyDataProcess::MsgToRequest(Trluper::Message& msg)
         id |= str[1]<<8;
         id |= str[2]<<16;
         id |= str[3]<<24;
-        int bytelength = 0;
-        bytelength |= str[4]<<0;
-        bytelength |= str[5]<<8;
-        bytelength |= str[6]<<16;
-        bytelength |= str[7]<<24;
+        size_t bytelength = 0;
+        bytelength |= static_cast<unsigned char>(str[4])<<0;
+        bytelength |= static_cast<unsigned char>(str[5])<<8;
+        bytelength |= static_cast<unsigned char>(str[6])<<16;
+        bytelength |= static_cast<unsigned char>(str[7])<<24;
         //请求不完整
         if(str.size()-8<bytelength){
              break;
         }
         MyRequest* _request =new MyRequest((REQUEST_TYPE)id,str.substr(8,bytelength));
-        lreq->lRequest.push_back(_request);
+        _request->next = req;
+        req = _request;
         str.erase(0,8+bytelength);
     }
-    if(lreq->lRequest.empty()==false){
-        ret = lreq;
-    }
-   
+    MyRequest* ret = req;
+    req = nullptr;
     return ret;
 }
 
@@ -135,8 +133,9 @@ Trluper::Message *MyDataProcess::RequestToMsg(Trluper::Request &request)
     Trluper::Message* _CMsg =new Trluper::Message(Trluper::IO_Direction::OUT);
     DYNAMIC_GETREF(MyRequest,_outRequest,request);
     std::string str=_outRequest->ret;
-    int id = _outRequest->requestType;
-    int bytelength = str.size();
+    //int id = _outRequest->requestType;
+    //int bytelength = str.size();
+    /*
     _CMsg->message.push_back((id>>0) & 0xff);
     _CMsg->message.push_back((id>>8) & 0xff);
     _CMsg->message.push_back((id>>16) & 0xff);
@@ -145,6 +144,7 @@ Trluper::Message *MyDataProcess::RequestToMsg(Trluper::Request &request)
     _CMsg->message.push_back((bytelength>>8) & 0xff);
     _CMsg->message.push_back((bytelength>>16) & 0xff);
     _CMsg->message.push_back((bytelength>>24) & 0xff);
+    */
     _CMsg->message.append(str);
     delete _outRequest;
     _outRequest = nullptr;
@@ -156,22 +156,22 @@ Trluper::Message *MyDataProcess::RequestToMsg(Trluper::Request &request)
 ```
 inline Trluper::Request *MyFApplycations::ProcRequest(Trluper::Request& _request)
 {
-    DYNAMIC_GETREF(ListRequest,_lRequestObj,_request);
-   while(false == _lRequestObj->lRequest.empty()){
-        auto request = _lRequestObj->lRequest.front();
-        _lRequestObj->lRequest.pop_front();
-        std::cout<<"Type is: "<<request->requestType<<std::endl;
-        switch (request->requestType)
+        DYNAMIC_GETREF(MyRequest,node,_request);
+    while(node != nullptr){
+        auto current = node;
+        node = dynamic_cast<MyRequest*>(node->next);
+        std::cout<<"Type is: "<<current->getRequestType()<<std::endl;
+        switch (current->getRequestType())
         {
         case REQUEST_TYPE::REQUEST_TYPE_ECHO:
-            echoFunc(request->ret);
+            echoFunc(current->ret);
             break;
         case REQUEST_TYPE::REQUEST_TYPE_ECHO_LEN:
-            echoAndLenFunc(request->ret);
+            echoAndLenFunc(current->ret);
             break;
         }
         //释放数据层的分配的堆
-        delete request;
+        delete current;
     }
     return nullptr;
 }
@@ -206,7 +206,7 @@ public:
     
     MyRequest(REQUEST_TYPE _type,std::string str);
     virtual ~MyRequest();
-    
+    template<typename T=REQUEST_TYPE> T getRequestType(){return requestType;}
 
 public:
     //用户的protobuf消息指针
@@ -432,7 +432,7 @@ void test(){
     //manager.addTimer(120000,cb,NULL,true);
     while(true){
         //sleep(2);
-        Trluper::LinkedList<Trluper::Timer> tlist;
+        Trluper::LinkedList tlist;
         manager.listExpiredCb(tlist);
         auto head = tlist.getHead();
         while(head!=nullptr){
@@ -440,7 +440,7 @@ void test(){
             head = head->next;
             p->data.callBack();
             if(p->data.isRecur()){
-                p->data.resetTimer(p,false,2000);
+                manager.addTim er(p);
             }else{
                 delete p;
             }
@@ -474,3 +474,34 @@ int main(){
 - `RegexParserHttpRequest`：正则表达式解析函数（解析性能本机测试为3704ms/10000条）
 - `FSMParserHttpRequest`：有限状态机解析函数（解析性能本机测试为46ms/10000条），有限状态机的状态转移示意图如下：
 <img src="images/FSM.png" width =1000>
+
+对http的测试见`test/http`该文档实现了一个简易的webserver服务器（待更新）
+
+# 路由模块
+在实际中，业务应用层的业务逻辑和模块/类会随着业务的增长而增长，并且有些业务是全部用户所共享的，如果单纯的为每一个用户绑定所有的这些业务逻辑不现实，因此就需要一个路由表来维护业务应用的实例，当数据处理层对接收到的`message`进行解析后得到的`UserMsg`，通过将`UserMsg`与路由表进行比对，解决该数据由哪个业务逻辑处理。
+
+基于上述的思想，设计了一个支持插入在数据处理层和业务层之间的路由模块`router<T,K>`,T是哈希关键字，K则是用户继承于`Request`实现的类的指针：
+
+- 其中重要的成员变量是`m_routingTable`，由哈希表实现
+- 主要调用接口为`getNextProcessor(T key)、addProcessor(T key,FApplycations* value)、eraseProcessor(T key)`
+
+## 路由模块使用实例
+```
+int main(int argc,char* argv[]){
+    Trluper::Router<REQUEST_TYPE,MyRequest*> m;
+    TestFApplycations* app1=new TestFApplycations();
+    TestFApplycations* app2=new TestFApplycations();
+    std::cout<<"app1:"<<app1<<" "<<"app2:"<<app2<<std::endl;
+    m.addProcessor(REQUEST_TYPE::REQUEST_TYPE_ECHO,app1);
+    m.addProcessor(REQUEST_TYPE::REQUEST_TYPE_ECHO_LEN,app2);
+
+    //下语句实际开发不用写，已在框架内部实现，这里只是做测试
+    Trluper::UserMsg* msg = new Trluper::UserMsg(Trluper::IO_Direction::IN);
+    MyRequest* req=new MyRequest(REQUEST_TYPE::REQUEST_TYPE_ECHO,"ROUTER TEST!!");
+    msg->SetRequest(req);
+    m.Handle(*msg);  //
+}
+```
+
+
+# webServer的压力性能测试

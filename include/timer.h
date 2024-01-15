@@ -17,17 +17,21 @@
 #include <list>
 #include "mutex.h"
 #include "util.h"
-#include "linkedList.h"
+
 
 namespace Trluper{
 
 class TimerManager;
+template<typename T> class Node;
+struct LinkedList;
 
 
 class Timer:public std::enable_shared_from_this<Timer>{//C++11新特性，异步调用保活(shared_ptr的使用注意)
 private:
     //声明定时器管理类为友元类
+    friend class LinkedList;
     friend class TimerManager;
+    template<typename T>friend class Node;
 public:
     //定时器的智能指针类型
     typedef std::shared_ptr<Timer>  ptr;
@@ -51,19 +55,17 @@ public:
     /// @brief 判断当前定时器是否为循环定时器
     /// @return true为循环定时器应重上时间轮，false为非循环
     bool isRecur(){return m_recurring;}
-    
-    /// @brief 重新设置定时器在时间轮的哪一级,哪一可刻度上,如果需要重置定时器触发reset则置为true,并设置新的ms
-    /// @param ms 定时器执行的间隔时间
-    /// @param from_now 是否从当前时间开始计算
-    bool resetTimer(Node<Timer>* timer, bool reset,uint64_t ms,bool from_now = true);
-    
     /// @brief 回调函数调用接口
     void callBack(){m_cb(m_arg);}
 
 private:
+    /// @brief 重新设置定时器在时间轮的哪一级,哪一可刻度上,如果需要重置定时器触发reset则置为true,并设置新的ms
+    /// @param ms 定时器执行的间隔时间
+    /// @param from_now 是否从当前时间开始计算
+    bool resetTimer(Node<Timer>* timer, bool reset,uint64_t ms,bool from_now = true);
     /// @brief 重新设置定时器在时间轮的哪一级,哪一可刻度上
     void refresh(Node<Timer>* timer);
-
+    Timer(){}
 private:
     //是否循环定时器
     bool m_recurring = false;
@@ -94,24 +96,21 @@ public:
     
     //创建定时器
     Node<Timer>* addTimer(uint64_t ms,std::function<void(void*)> cb,void* arg,bool recurring = false);
-    
+    //将定时器添加进管理器的时间轮中,提供写锁
+    void addTimer(Node<Timer>* timer);
     //得到第一级即工作轮的最近一个定时器的执行时间，如果第一级没有，则会返回第二级时间轮的槽时间
     uint64_t getNextTimer();
     
     //获得需要当前需要执行的定时器列表(轮询)
-    void listExpiredCb(Trluper::LinkedList<Timer>& tlist);
+    void listExpiredCb(Trluper::LinkedList& tlist);
     
     //是否有定时器在时间轮上，不推荐使用，该接口会造成写锁阻塞
     bool hasTimer();
     
-protected:
-    //将定时器添加进管理器的时间轮中,提供写锁
-    void addTimer(Node<Timer>* timer);
-
 private:
     //二级时间轮
-    std::vector<Trluper::LinkedList<Timer>> m_workWheel;
-    std::vector<std::vector<Trluper::LinkedList<Timer>>> m_secondWheel;
+    std::vector<Trluper::LinkedList> m_workWheel;
+    std::vector<std::vector<Trluper::LinkedList>> m_secondWheel;
     
     //时间轮的刻度
     uint32_t m_workScale;
@@ -131,7 +130,61 @@ private:
     RWMutex m_mutex;
 };
 
+template<typename T>
+struct Node
+{
+    T data;
+    Node<T>* next,*prio;
+    Node():next(nullptr),prio(nullptr) {}
+    Node(Timer value):data(value),next(nullptr),prio(nullptr) {}
+};
 
+
+struct LinkedList
+{
+public:
+    LinkedList():m_len(0) {
+        m_pHead = new Node<Timer>();
+        m_pTail = m_pHead;
+    }
+    ~LinkedList() {
+        while(m_pHead != nullptr) {
+            Node<Timer>* temp = m_pHead;
+            m_pHead = m_pHead->next;
+            if(m_pHead != nullptr) m_pHead->prio = nullptr;
+            temp->next = nullptr;
+            //!segmentation fault
+            delete temp;
+            --m_len;
+        }
+    }
+    
+    /// @brief 尾部插入新节点
+    /// @param _node 新节点
+    void addNode(Node<Timer>* _node) {
+        if(_node == nullptr)  {
+            return;
+        }
+        m_pTail->next = _node;
+        _node->prio = m_pTail;
+        m_pTail = m_pTail->next;
+        ++m_len;
+    }
+    Node<Timer>* getHead() { return m_pHead->next; }
+    void setNullptr() {
+        if(m_pHead->next != nullptr) m_pHead->next->prio = nullptr;
+        m_pHead->next = nullptr;
+        m_pTail = m_pHead;
+        m_len = 0;
+    }
+    bool empty() { return m_len==0; }
+    size_t size() { return m_len; }
+
+private:
+    Node<Timer>* m_pHead;
+    Node<Timer>* m_pTail;
+    size_t m_len;
+};
 
 }
 
