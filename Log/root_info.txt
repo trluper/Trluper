@@ -208,3 +208,15 @@
 
 2024-01-05 17:40:17 [root][INFO] 17212(Trluper-0) /home/project/Trluper/src/server.cc (in ctlAcceptFd: 261): 新的客户端连接,ip：172.20.25.130
 
+2024-01-14 22:43:38 [root][INFO] 8056(Trluper-0) /home/project/Trluper/src/server.cc (in ctlAcceptFd: 261): 新的客户端连接,ip：172.20.16.1
+
+2024-01-14 22:43:38 [root][INFO] 8057(Trluper-1) /home/project/Trluper/src/server.cc (in ctlAcceptFd: 261): 新的客户端连接,ip：172.20.16.1
+
+2024-01-14 22:43:56 [root][INFO] 8061(Trluper-5) /home/project/Trluper/src/server.cc (in ctlCloseFd: 297): 客户端ip：172.20.16.1已断开链接
+
+2024-01-15 20:31:37 [root][INFO] 16625(Trluper-0) /home/project/Trluper/src/server.cc (in ctlAcceptFd: 261): 新的客户端连接,ip：172.20.16.41
+
+2024-01-15 22:04:03 [root][INFO] 28561(Trluper-0) /home/project/Trluper/src/server.cc (in ctlAcceptFd: 261): 新的客户端连接,ip：172.20.16.41
+
+2024-01-15 22:04:15 [root][INFO] 28567(Trluper-6) /home/project/Trluper/src/server.cc (in ctlCloseFd: 297): 客户端ip：172.20.16.41已断开链接
+

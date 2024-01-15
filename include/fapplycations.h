@@ -20,8 +20,8 @@ public:
     
 protected:
     //本阶段真正的处理函数,
-    virtual AbstractMsg* currentHandle(AbstractMsg& msg)override;
-    virtual AbstractHandle* GetNextHanlder(AbstractMsg& msg)override;
+    virtual AbstractMsg* currentHandle(AbstractMsg& msg)override final;
+    virtual AbstractHandle* GetNextHanlder(AbstractMsg& msg)override final;
 };
 
 }

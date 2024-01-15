@@ -6,7 +6,7 @@
 
 class MyDataProcess;
 class MyRequest;
-class ListRequest;
+
 
 class MyFApplycations:public Trluper::FApplycations
 {
@@ -65,22 +65,22 @@ inline Trluper::Request *MyFApplycations::echoAndLenFunc(std::string str)
 
 inline Trluper::Request *MyFApplycations::ProcRequest(Trluper::Request& _request)
 {
-    DYNAMIC_GETREF(ListRequest,_lRequestObj,_request);
-    while(false == _lRequestObj->lRequest.empty()){
-        auto request = _lRequestObj->lRequest.front();
-        _lRequestObj->lRequest.pop_front();
-        std::cout<<"Type is: "<<request->requestType<<std::endl;
-        switch (request->requestType)
+    DYNAMIC_GETREF(MyRequest,node,_request);
+    while(node != nullptr){
+        auto current = node;
+        node = dynamic_cast<MyRequest*>(node->next);
+        std::cout<<"Type is: "<<current->getRequestType()<<std::endl;
+        switch (current->getRequestType())
         {
         case REQUEST_TYPE::REQUEST_TYPE_ECHO:
-            echoFunc(request->ret);
+            echoFunc(current->ret);
             break;
         case REQUEST_TYPE::REQUEST_TYPE_ECHO_LEN:
-            echoAndLenFunc(request->ret);
+            echoAndLenFunc(current->ret);
             break;
         }
         //释放数据层的分配的堆
-        delete request;
+        delete current;
     }
     return nullptr;
 }
