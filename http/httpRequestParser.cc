@@ -73,14 +73,16 @@ bool Trluper::HttpRequestParser::RegexParserHttpRequest(const std::string &reque
     return true;
 }
 
-bool HttpRequestParser::FSMParserHttpRequest(const std::string &request, HttpRequest &_httpRequest)
+bool HttpRequestParser::FSMParserHttpRequest(std::string &request, HttpRequest &_httpRequest)
 {
     logger = LOG_GET_MANAGER->getMainLogger();
     const char* _request = request.c_str();
-    return FSMParserHttpRequest(_request, _httpRequest, request.size());
+    size_t len = FSMParserHttpRequest(_request, _httpRequest, request.size());
+    request.erase(0,len);
+    return len>0;
 }
 
-bool HttpRequestParser::FSMParserHttpRequest(const char *request, HttpRequest &_httpRequest, size_t len)
+size_t HttpRequestParser::FSMParserHttpRequest(const char *request, HttpRequest &_httpRequest, size_t len)
 {
     StringBuffer m_method;
     StringBuffer m_path;
@@ -334,7 +336,7 @@ bool HttpRequestParser::FSMParserHttpRequest(const char *request, HttpRequest &_
                         FSMStatus = (bodyLen>0) ? HttpRequestStatus::BODY : HttpRequestStatus::COMPLETE;
                     }
                     else {
-                        if(pos < len) {
+                        if((pos+1) < len) {
                             bodyLen = len - pos;
                             FSMStatus = HttpRequestStatus::BODY;
                         }else{
@@ -360,7 +362,9 @@ bool HttpRequestParser::FSMParserHttpRequest(const char *request, HttpRequest &_
                 break;
         }
     }
-    return FSMStatus==HttpRequestStatus::COMPLETE ? true:false;
+
+    return FSMStatus==HttpRequestStatus::COMPLETE ? index+bodyLen:0;
+    
 }
 
 bool HttpRequestParser::cookieParser(const std::string &request, HttpRequest &_httpRequest)

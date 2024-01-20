@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selection Page</title>
+</head>
+<body>
+
+<h2>Choose an Option:</h2>
+
+<!-- Buttons to redirect to different pages -->
+<button onclick="redirectTo('image.html')">View Images</button>
+<button onclick="redirectTo('video.html')">Watch Videos</button>
+<button onclick="redirectTo('download.html')">Download Files</button>
+
+<script>
+    function redirectTo(page) {
+        // Redirect to the selected page
+        window.location.href = page;
+    }
+</script>
+
+</body>
+</html>

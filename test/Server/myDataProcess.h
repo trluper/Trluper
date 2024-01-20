@@ -16,7 +16,7 @@ public:
     void SetFApplycationsObj(Trluper::FApplycations* _app = nullptr);
     //*重写该函数，返回一个Connections对象指针
     virtual Trluper::Connections* GetConnectionsObj(Trluper::AbstractMsg& msg)override;
-    virtual  Trluper::FApplycations* GetApplycationsObj(Trluper::AbstractMsg& msg)override;
+    virtual  Trluper::AbstractHandle* GetApplycationsObj(Trluper::AbstractMsg& msg)override;
     //*重写该函数，这里用TVL形式的数据作为测试
     virtual Trluper::Request* MsgToRequest(Trluper::Message& str)override;
     virtual Trluper::Message* RequestToMsg(Trluper::Request& request)override;
@@ -53,7 +53,7 @@ inline Trluper::Connections *MyDataProcess::GetConnectionsObj(Trluper::AbstractM
     return conn;
 }
 
-inline Trluper::FApplycations *MyDataProcess::GetApplycationsObj(Trluper::AbstractMsg &msg)
+inline Trluper::AbstractHandle*MyDataProcess::GetApplycationsObj(Trluper::AbstractMsg &msg)
 {
     return app;
 }

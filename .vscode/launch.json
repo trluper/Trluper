@@ -5,7 +5,7 @@
             "name": "Trluper Frame debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/home/project/Trluper/TEST/router",
+            "program": "/home/project/Trluper/TEST/httpServer",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

@@ -91,18 +91,13 @@ template <typename T,typename K>
 inline AbstractMsg *Router<T,K>::currentHandle(AbstractMsg &msg)
 {
     DYNAMIC_GETREF(UserMsg, _msg, msg);
-    std::cout<<"this is router"<<std::endl;
     Request* req = _msg->getRequest();
     while(req != nullptr){
         auto currentNode = req;
         req = req->next;
         K _req = dynamic_cast<K>(currentNode);
         T key =  _req->getRequestType();
-
-        std::cout<<_req->ret<<std::endl;
-
         FApplycations* _app = m_routingTable[key];
-        std::cout<<_app<<std::endl;
         UserMsg* arg=new UserMsg(IO_Direction::IN);
         arg->SetRequest(_req);
         _app->Handle(*arg);

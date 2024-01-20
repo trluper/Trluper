@@ -4,8 +4,8 @@ project(Trluper)
 
 set(CMAKE_CXX_COMPILER g++)  # 指定 C++ 编译器
 set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -rdynamic -O3 -fPIC -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function -Wno-builtin-macro-redefined -Wno-deprecated-declarations")
-set(CMAKE_C_FLAGS "$ENV{CXXFLAGS} -rdynamic -O3 -fPIC -ggdb -std=c11 -Wall -Wno-deprecated -Werror -Wno-unused-function -Wno-builtin-macro-redefined -Wno-deprecated-declarations")
+set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -rdynamic -O3 -fPIC -ggdb -std=c++17 -Wall -Wno-deprecated -Werror -Wno-unused-function -Wno-builtin-macro-redefined -Wno-deprecated-declarations ")
+set(CMAKE_C_FLAGS "$ENV{CXXFLAGS} -rdynamic -O3 -fPIC -ggdb -std=c17 -Wall -Wno-deprecated -Werror -Wno-unused-function -Wno-builtin-macro-redefined -Wno-deprecated-declarations ")
 
 #如果希望使用单线程运行，可使用下面语句定义宏_SIGLETHREAD_
 #add_compile_definitions(_SIGLETHREAD_)
@@ -84,3 +84,6 @@ add_executable(router test/test_router.cc)
 target_include_directories(router PUBLIC test)
 target_link_libraries(router ${LIBS})
 
+add_executable(httpServer test/httpServer/httpserver.cc)
+target_include_directories(httpServer PUBLIC test/httpServer)
+target_link_libraries(httpServer ${LIBS})

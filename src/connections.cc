@@ -40,14 +40,15 @@ inline void Connections::FlushOut()
 
 inline bool Connections::writeFd(std::string &_output)
 {
+    //std::cout<<_output<<std::endl;
     bool ret = false;
     std::size_t len = _output.size(), loc = 0;
     const char* p = _output.c_str();
     while(loc < len){
         p+=loc;
         if(dataFd>=0){
-            loc = (size_t)(send(dataFd,p,len-loc,0));
-            std::cout<<"send to client:"<<dataFd<<", packetSize: "<< loc << std::endl;
+            loc = (size_t)(send(dataFd,p,len-loc,MSG_NOSIGNAL));
+            //std::cout<<"send to client:"<<dataFd<<", packetSize: "<< loc << std::endl;
             ret = true;
         }
     }
@@ -82,6 +83,7 @@ inline bool Connections::ReadFd(std::string& _input)
             }
         }  
     }
+    //std::cout<<_input<<std::endl;
     return ret;
 } 
 
