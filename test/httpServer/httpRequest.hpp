@@ -2,8 +2,11 @@
 
 #include <list>
 #include "http.h"
+#include "httpDataProcess.hpp"
 #include "httpRequestParser.h"
 #include "message.h"
+
+class HttpDataprocess;
 
 enum HTTP_REQUEST_TYPE{
     TEXT        = 1,        //文本文件类型：html\css\javascript\xml\plain
@@ -15,25 +18,39 @@ enum HTTP_REQUEST_TYPE{
 
 class HttpRequestWrapper:public Trluper::Request{
 public:    
-    HttpRequestWrapper(HTTP_REQUEST_TYPE _type, Trluper::HttpRequest::ptr _request);
+    HttpRequestWrapper(HttpDataprocess* process);
     virtual ~HttpRequestWrapper();
-private:
+    template<typename T=HTTP_REQUEST_TYPE> T getRequestType(){return m_type;}
+public:
     //识别请求类型
     HTTP_REQUEST_TYPE m_type;
     //http请求封装
     Trluper::HttpRequest::ptr m_request;
+    //协议层对象
+    HttpDataprocess* m_process=nullptr;
 };
 
-class ListHttpRequest: public Trluper::Request{
+
+class HttpResponseWrapper:public Trluper::Request{
 public:
-    std::list<Request*> m_lreqeust;
+    HttpResponseWrapper();
+    virtual ~HttpResponseWrapper();
+public:
+    Trluper::HttpResponse::ptr m_response;
 };
 
-HttpRequestWrapper::HttpRequestWrapper(HTTP_REQUEST_TYPE _type, 
-    Trluper::HttpRequest::ptr _request):m_type(_type),m_request(_request){
+
+HttpRequestWrapper::HttpRequestWrapper(HttpDataprocess* process):m_process(process){
 
 }
 
 HttpRequestWrapper::~HttpRequestWrapper(){
 
+}
+
+HttpResponseWrapper::HttpResponseWrapper(){
+
+}
+HttpResponseWrapper::~HttpResponseWrapper(){
+    
 }

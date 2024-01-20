@@ -19,7 +19,7 @@ int main(int argc, char* argv[]){
     Trluper::HttpRequest req;
     // 获取当前时间点（开始时间）
     auto start_time = std::chrono::high_resolution_clock::now();
-    for(int i=0;i<10000;++i){
+    for(int i=0;i<1;++i){
         //p->RegexParserHttpRequest(request,req);
         /*if(p->RegexParserHttpRequest(request,req)){
             std::cout<<req.httpStringRequest()<<std::endl;

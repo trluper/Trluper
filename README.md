@@ -38,9 +38,9 @@ make
 
 
 # 框架介绍
-该服务器框架是基于epoll和socket技术的基础上实现的一个并发tcp_server框架。该框架采用三层结构的设计思想，实现服务器对客户端请求处理过程的解耦合。三层结构为连接层`Connections`、数据处理层`DataProcess`和业务应用层`FApplycations`。
+该服务器框架是基于epoll和socket技术的基础上实现的一个并发tcp_server框架。该框架采用三层结构的设计思想，实现服务器对客户端请求处理过程的解耦合。三层结构为连接层`Connections`、数据处理层`DataProcess`和业务应用层`FApplycations`，支持多线程处理。
 
-此外，还集成了**路由功能**；封装**线程、锁和信号量**等调用模块和**线程池管理**；配备了**日志系统`log`**；配备了**定时器`Timer`**模块；支持**`TCP/HTTP`协议**，以提供快速部署高性能的TcpServer和HTTPServer的能力
+此外，还集成了**路由功能**；封装**线程、锁和信号量**等调用模块和**线程池管理**；配备了**日志系统`log`**；配备了**定时器`Timer`**模块；支持**`TCP/HTTP`协议**，以提供快速部署高性能的TcpServer和HTTPServer的能力,
 
 开发可以基于此框架开发自己的WebServer和其他相关服务器，也可以通过实现该框架加深对后端知识的理解。
 
@@ -505,3 +505,9 @@ int main(int argc,char* argv[]){
 
 
 # webServer的压力性能测试
+关闭日志记录后，使用Webbench对服务器进行压力测试，可实现上万的并发连接（测试电脑设备为：HUAWEI matebook13 Cpu:i5-8265U CPU @ 1.60GHz 1.80 GHz; RAM: 8GB
+
+其测试结果**QPS：7418**
+<img src="images/QPS.png" width =1000>
+
+webServer的源码见目录`/test/httpServer`

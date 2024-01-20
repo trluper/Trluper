@@ -7,6 +7,7 @@ LoggerManager* Server::logger_manager = nullptr;
 Logger::ptr Server::logger = nullptr;
 std::size_t Server::read_buffer_size = 1024;
 std::size_t Server::write_buffer_size = 2024;
+Semaphore Server::m_serversem;
 
 /// @brief 调用构造函数Server()和Init(),创建服务器socket，并执行绑定、监听功能，调用init()进行epoll上树操作
 /// @param ip ：ip地址
@@ -118,7 +119,7 @@ void Server::ServerUseHandleOfDataProcess(DataProcess &process, Request* request
 /// @brief 创建服务器socket，并执行绑定、监听功能，调用init()进行epoll上树操作
 /// @param ip ：ip地址
 /// @param port ：端口号
-Server::Server(std::string& path, AbstractFactory* _singleFactory,bool multiThread):singleFactory(_singleFactory)
+Server::Server(std::string& path, AbstractFactory* _singleFactory,bool multiThread):m_multithread(multiThread),singleFactory(_singleFactory)
 {
     const Json::Value& root = getConfig(path);
     Server::read_buffer_size = root["read_buffer_size"].asInt();
@@ -213,24 +214,25 @@ void Server::run()
         iEpollRet = epoll_wait(epollfd, hashChange, max_handle, -1);
         //!V0.3版本
         for(int i=0;i<iEpollRet;++i){
-#ifdef _SIGLETHREAD_
-            //*listenfd读事件
-            if(hashChange[i].data.fd==listenfd&&hashChange[i].events&EPOLLIN){ 
-                ctlAcceptFd();
-            }
-            //*dataFd读事件，服务器epoll_wait只获取读事件，写事件在处理完请求后，直接响应发送
-            else if(hashChange[i].events&EPOLLIN){
-                IOState state(IO_Direction::IN);
-                Connections* conn =(Connections*)hashChange[i].data.ptr;
-                conn->Handle(state);
-                //判断客户端的连接状态
-                if(conn->ConnectionNeedClose()==true){
-                    Server::ServerDelConn(hashChange[i]);
+            if(m_multithread == false){
+                //*listenfd读事件
+                if(hashChange[i].data.fd==listenfd&&hashChange[i].events&EPOLLIN){ 
+                    ctlAcceptFd();
+                }
+                //*dataFd读事件，服务器epoll_wait只获取读事件，写事件在处理完请求后，直接响应发送
+                else if(hashChange[i].events&EPOLLIN){
+                    IOState state(IO_Direction::IN);
+                    Connections* conn =(Connections*)hashChange[i].data.ptr;
+                    //判断客户端的连接状态
+                    conn->Handle(state);
+                    if(conn->ConnectionNeedClose()==true){
+                        Server::ServerDelConn(hashChange[i]);
+                    }
                 }
             }
-#else
-            while(false == threadPool->pushTask(&hashChange[i]));
-#endif
+            else{
+                 threadPool->pushTask(&hashChange[i]);
+            }
 #ifdef _OLD_CODE_
             //*dataFd写事件,服务器主动发送时就会触发
             else{
@@ -241,6 +243,10 @@ void Server::run()
 
             }
 #endif
+        }
+        if(m_multithread){
+            threadPool->m_sem_taskQueue.notify();
+            this->m_serversem.wait();
         }
     }
 }
@@ -258,8 +264,8 @@ void Server::ctlAcceptFd()
     if(dataFd>=0){
         char ip[16];
         inet_ntop(AF_INET,&clientSocket.sin_addr.s_addr,ip,16);
-        LOG_SS_INFO(logger)<<"新的客户端连接,ip："<<ip<<std::endl;
-        std::cout<<"<------------------------------------------------------------->"<<std::endl;
+        //LOG_SS_INFO(logger)<<"新的客户端连接,ip："<<ip <<"dataFD: "<<dataFd<<std::endl;
+        //std::cout<<"<------------------------------------------------------------->"<<std::endl;
         //创建相应的连接层、数据层和业务层对象
         Connections* conn = singleFactory->CreateAllObjWhenAccept(dataFd);
         if(nullptr!=conn){
@@ -294,11 +300,15 @@ void Server::ctlAcceptFd()
 void Server::ctlCloseFd(struct epoll_event& ev)
 {
     Connections* conn = (Connections*)ev.data.ptr;
-    LOG_SS_INFO(logger)<<"客户端ip："<<conn->GetIP()<<"已断开链接"<<std::endl;
-    m_ConnctionsMap.erase(ev.data.fd);
-    epoll_ctl(epollfd,EPOLL_CTL_DEL,ev.data.fd,&ev);
-    close(ev.data.fd);
+    int fd = conn->GetFd();
+    //LOG_SS_INFO(logger)<<"客户端："<<fd<<"已断开链接"<<std::endl;
+    m_ConnctionsMap.erase(fd);
+    epoll_ctl(epollfd,EPOLL_CTL_DEL,fd,&ev);
+    close(fd);
     //释放堆区
-    delete conn;
+    if(conn != nullptr){
+        delete conn;
+        conn=nullptr;
+    }
 }
 }

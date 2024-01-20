@@ -79,8 +79,8 @@ public:
     /// @param request http请求报文
     /// @param HttpRequest 存储解析后的结果
     /// @return 解析是否成功
-    bool FSMParserHttpRequest(const std::string& request, HttpRequest& _httpRequest);   //46651us/10000条
-    bool FSMParserHttpRequest(const char* request, HttpRequest& _httpRequest, size_t len);
+    bool FSMParserHttpRequest(std::string& request, HttpRequest& _httpRequest);   //46651us/10000条
+    size_t FSMParserHttpRequest(const char* request, HttpRequest& _httpRequest, size_t len);
     static std::shared_ptr<HttpRequestParser> getSingle();
     ~HttpRequestParser() = default;
 private:

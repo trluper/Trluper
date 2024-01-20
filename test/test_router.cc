@@ -80,6 +80,6 @@ int main(int argc,char* argv[]){
     MyRequest* req=new MyRequest(REQUEST_TYPE::REQUEST_TYPE_ECHO,"ROUTER TEST!!");
     msg->SetRequest(req);
     m.Handle(*msg);  //
-   
+    
   
 }

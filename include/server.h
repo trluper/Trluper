@@ -70,28 +70,29 @@ public:
     */
     /*当业务应用层处理完后，应该调用数据层的额Handle函数进行响应，该函数在业务层处理后调用，由开发者调用*/
     static void ServerUseHandleOfDataProcess(DataProcess& process,Request* request);
-    
-private:
+    virtual ~Server();
+protected:
     //构造、拷贝构造、赋值私有化
     Server(std::string& path, AbstractFactory* _singleFactory,bool multiThread);
     Server(const Server& s){}
     const Server& operator=(const Server& s){return *this;}
-    ~Server();
     bool init();
     void run();
     //listenfd调用该函数，执行accept、创建Connctions与dataFd绑定、dataFd上树
     void ctlAcceptFd();
     //当客户端关闭时会调用此函数
     void ctlCloseFd(struct epoll_event& ev);
-private:
+protected:
+    //判断server的状态，当为true时，说明需要关闭服务器，那么执行ServerStop操作
+    bool server_exit=false;
+    //是否多线程
+    bool m_multithread = true;
     //epoll句柄
     int epollfd = -1;
     //listenfd的文件描述符
     int listenfd = -1;
     //serveraddr存储服务器的ip地址、端口号
     struct sockaddr_in serveraddr;
-    //判断server的状态，当为true时，说明需要关闭服务器，那么执行ServerStop操作
-    bool server_exit=false;
     //管理每个dataFd绑定的Connections对象
     std::unordered_map<int,Connections*> m_ConnctionsMap;
     //服务器单例对象
@@ -109,6 +110,7 @@ public:
     static LoggerManager* logger_manager;
     //日志器
     static Logger::ptr logger;
+    static Semaphore m_serversem;
 };
 
 
@@ -121,6 +123,7 @@ protected:
 public:
     virtual ~AbstractFactory(){};
     virtual Connections* CreateAllObjWhenAccept(int _dataFd) = 0;
+    
 };
 
 }

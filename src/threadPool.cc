@@ -27,14 +27,7 @@ namespace Trluper{
     }
     bool ThreadPool::pushTask(epoll_event *task)
     {
-        m_lock_taskQueue.lock();
-        if(m_taskQueue.size() >= m_max_handle){
-            m_lock_taskQueue.unlock();
-            return false;
-        }
         m_taskQueue.push_back(task);
-        m_lock_taskQueue.unlock();
-        m_sem_taskQueue.notify();
         return true;
     }
     void *ThreadPool::work(void *arg)
@@ -45,11 +38,17 @@ namespace Trluper{
     }
     void ThreadPool::_run()
     {
+        bool newEpoll = true;
         while(true){
-            m_sem_taskQueue.wait();
+            if(newEpoll){
+                m_sem_taskQueue.wait();
+                newEpoll = false;
+            }
             m_lock_taskQueue.lock();
             if(m_taskQueue.empty()){
+                newEpoll = true;
                 m_lock_taskQueue.unlock();
+                Server::m_serversem.notify();
                 continue;
             }
             struct epoll_event* ev = m_taskQueue.front();
@@ -63,6 +62,7 @@ namespace Trluper{
             else if(ev->events&EPOLLIN){
                 IOState state(IO_Direction::IN);
                 Connections* conn =(Connections*)ev->data.ptr;
+                //std::cout<<conn->GetFd()<<std::endl;
                 conn->Handle(state);
                 //判断客户端的连接状态
                 if(conn->ConnectionNeedClose()==true){
