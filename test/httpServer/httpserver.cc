@@ -13,6 +13,6 @@ int main(){
     factorySingle->setFApplycationObj(HTTP_REQUEST_TYPE::TEXT,textAPP);
     factorySingle->setFApplycationObj(HTTP_REQUEST_TYPE::IMAGE,imageAPP);
     Trluper::Server::ServerExceptionStop();
-    Trluper::Server::ServerInit(configPath,factorySingle,true);
+    Trluper::Server::ServerInit(configPath,factorySingle,false);
     Trluper::Server::ServerRun();
 }
