@@ -505,9 +505,9 @@ int main(int argc,char* argv[]){
 
 
 # webServer的压力性能测试
-关闭日志记录后，使用Webbench对服务器进行压力测试，可实现上万的并发连接（测试电脑设备为：HUAWEI matebook13 Cpu:i5-8265U CPU @ 1.60GHz 1.80 GHz; RAM: 8GB
+使用Webbench对服务器进行压力测试，可实现上万的并发连接（测试电脑设备为：cpu:i5-8265U CPU @ 1.60GHz 1.80 GHz; RAM: 8GB
 
-其测试结果**QPS：7418**
+其测试结果**QPS：25971**
 <img src="images/QPS.png" width =1000>
 
 webServer的源码见目录`/test/httpServer`

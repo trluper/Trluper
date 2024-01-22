@@ -1,13 +1,13 @@
 {
     "ip":"172.19.149.122",
     "port":8080,
-    "thread_nums":8,
+    "thread_nums":3,
     "max_handle":8000,
     "mysql_host":"172.19.149.122",
     "mysql_user":"trluper",
     "mysql_password":"123456",
     "mysql_port":3306,
     "mysql_database":"test", 
-    "read_buffer_size": 8192,
-    "write_buffer_size": 16384 
+    "read_buffer_size": 1024,
+    "write_buffer_size": 2048 
 } 
